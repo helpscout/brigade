@@ -1,0 +1,38 @@
+{
+  "name": "@helpscout/brigade",
+  "version": "0.0.1",
+  "description": "Backbone-controlled React components",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "zero build",
+    "lint": "zero lint",
+    "format": "zero format",
+    "validate": "zero validate",
+    "precommit": "zero precommit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/helpscout/brigade.git"
+  },
+  "keywords": [
+    "backbone",
+    "marionette",
+    "react",
+    "state"
+  ],
+  "author": "Nickolas Kenyeres <nickolas@knicklabs.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/helpscout/brigade/issues"
+  },
+  "homepage": "https://github.com/helpscout/brigade#readme",
+  "devDependencies": {
+    "@helpscout/zero": "0.0.9"
+  },
+  "peerDependencies": {
+    "backbone": "^1.3.3",
+    "backbone.cocktail": "^0.5.15",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0"
+  }
+}
