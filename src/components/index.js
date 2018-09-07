@@ -1,0 +1,1 @@
+export { EnhancedComponent } from "./EnhancedComponent";

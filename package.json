@@ -27,7 +27,8 @@
   },
   "homepage": "https://github.com/helpscout/brigade#readme",
   "devDependencies": {
-    "@helpscout/zero": "0.0.9"
+    "@helpscout/zero": "0.0.9",
+    "backbone.marionette": "^4.0.0"
   },
   "peerDependencies": {
     "backbone": "^1.3.3",
