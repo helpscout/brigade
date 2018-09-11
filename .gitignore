@@ -12,3 +12,6 @@ dist
 
 # Code coverage
 coverage
+
+# ESLint
+.eslintcache
