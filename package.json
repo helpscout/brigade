@@ -31,6 +31,7 @@
     "@helpscout/zero": "0.0.9",
     "backbone": "^1.3.3",
     "backbone.cocktail": "^0.5.15",
+    "eslint": "^5.5.0",
     "react": "^16.5.0",
     "react-dom": "^16.5.0"
   },

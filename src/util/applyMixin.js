@@ -1,7 +1,7 @@
-import Cocktail from "backbone.cocktail";
+import Cocktail from 'backbone.cocktail'
 
-const applyMixin = (view, mixin) => {
-  return Cocktail.mixin(view, mixin);
-};
+const applyMixin = (view, mixin, blend = Cocktail.mixin) => {
+  return blend(view, mixin)
+}
 
-export default applyMixin;
+export default applyMixin
