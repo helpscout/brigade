@@ -1,16 +1,20 @@
 {
   "name": "@helpscout/brigade",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "Backbone-controlled React components",
   "main": "dist/index.js",
   "scripts": {
     "build": "zero build",
+    "bundle": "zero build bundle",
+    "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
+    "postversion": "npm publish",
     "lint": "zero lint",
     "format": "zero format",
     "validate": "zero validate",
     "precommit": "zero precommit",
-    "test": "zero test",
-    "test:coverage": "zero test --coverage"
+    "test": "zero test --coverage",
+    "test:watch": "zero test --watch",
+    "version": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -35,6 +39,7 @@
     "enzyme": "2.9.1",
     "eslint": "^5.5.0",
     "jquery": "^3.3.1",
+    "nyc": "^13.0.1",
     "react": "15.6.1",
     "react-dom": "15.6.1",
     "react-test-renderer": "^16.5.0"
