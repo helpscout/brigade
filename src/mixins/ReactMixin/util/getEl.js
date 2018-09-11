@@ -1,5 +1,9 @@
 const getEl = (view, selector) => {
-  return view.$(selector)[0];
-};
+  const matches = view.$(selector)
+  if (matches && matches.length > 0) {
+    return matches[0]
+  }
+  return undefined
+}
 
-export default getEl;
+export default getEl
