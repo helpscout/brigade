@@ -21,6 +21,12 @@ describe('transformDataToProps', () => {
     model2: dataWithModels.model2.toJSON(),
   }
 
+  test('should return an empty object by default', () => {
+    const props = transformDataToProps()
+    expect(props).toEqual({})
+    expect(Object.keys(props)).toHaveLength(0)
+  })
+
   test('should return the given data unaltered by default', () => {
     expect(transformDataToProps(data)).toEqual(data)
   })

@@ -58,6 +58,8 @@ describe('buildComponents', () => {
             return ["<p class='some-class'></p>"]
           case '.other-class':
             return ["<div class='other-class'></div>"]
+          case '.no-builder-class':
+            return ["<div class='no-builder-class'></div>"]
           default:
             return undefined
         }
@@ -67,6 +69,7 @@ describe('buildComponents', () => {
       '.some-class': () => [{}],
       '.other-class': false,
       '.no-match-class': () => [{}],
+      '.no-builder-class': () => false,
     }
     const builtComponents = buildComponents(
       view,

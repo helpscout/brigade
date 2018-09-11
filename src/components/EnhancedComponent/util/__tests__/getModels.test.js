@@ -9,9 +9,12 @@ describe('getModels', () => {
     object: {some: 'Object'},
   }
 
+  test('should return an empty array by default', () => {
+    expect(getModels()).toEqual([])
+  })
+
   test('should return an empty array if there are no models', () => {
-    const result = getModels(data)
-    expect(result).toEqual([])
+    expect(getModels(data)).toEqual([])
   })
 
   test('should return an array of models if there are models', () => {
