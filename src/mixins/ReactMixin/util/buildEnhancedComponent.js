@@ -1,8 +1,8 @@
 import { EnhancedComponent } from "../../../components";
 import React from "react";
 
-const buildEnhancedComponent = (component, state, selector) => {
-  const props = { component, state, selector };
+const buildEnhancedComponent = (component, data, selector) => {
+  const props = { component, data, selector };
   return <EnhancedComponent {...props} />;
 };
 

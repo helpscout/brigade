@@ -1,5 +1,5 @@
 import { render as defaultRender } from "react-dom";
-import { buildEnhancedComponent, getBuilder, getEl } from "./util";
+import { buildEnhancedComponent, getBuilder, getEl } from ".";
 
 const buildComponents = (view, components, render = defaultRender) => {
   return Object.keys(components).map(selector => {
