@@ -1,3 +1,4 @@
+import React from 'react'
 import {render as defaultRender} from 'react-dom'
 import {
   buildEnhancedComponent as defaultBuildEnhancedComponent,
@@ -25,10 +26,12 @@ const buildComponents = (
         return undefined
       }
 
-      if (result.constructor === Array) {
-        render(buildEnhancedComponent(...result), el)
-      } else {
+      if (React.isValidElement(result)) {
         render(result, el)
+      } else if (result && result.component) {
+        render(buildEnhancedComponent(result), el)
+      } else {
+        return undefined
       }
 
       return el

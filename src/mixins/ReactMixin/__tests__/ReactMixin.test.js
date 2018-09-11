@@ -17,9 +17,10 @@ describe('ReactMixin', () => {
   const ReactView = Backbone.View.extend({
     components: {
       '#region1': () => <DummyComponent text="Text 1" id="text1" />,
-      '#region2': () => {
-        return [<DummyComponent id="text2" />, {text: 'Text 2'}]
-      },
+      '#region2': () => ({
+        component: <DummyComponent id="text2" />,
+        data: {text: 'Text 2'},
+      }),
     },
     element: $('#app'),
     template: `

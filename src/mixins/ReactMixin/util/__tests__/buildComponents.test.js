@@ -50,6 +50,23 @@ describe('buildComponents', () => {
     expect(builtComponents).toHaveLength(0)
   })
 
+  test('should filter out items with unexpected builder results', () => {
+    const view = {
+      $: () => ["<p class='some-class'></p>"],
+    }
+    const components = {
+      '.some-class': () => ({}),
+    }
+    const builtComponents = buildComponents(
+      view,
+      components,
+      buildEnhancedComponent,
+      render,
+    )
+    expect(builtComponents).toBeDefined()
+    expect(builtComponents).toHaveLength(0)
+  })
+
   test('should filter out items with missing elements or builders', () => {
     const view = {
       $: selector => {
@@ -66,9 +83,9 @@ describe('buildComponents', () => {
       },
     }
     const components = {
-      '.some-class': () => [{}],
+      '.some-class': () => ({component: <div />}),
       '.other-class': false,
-      '.no-match-class': () => [{}],
+      '.no-match-class': () => ({}),
       '.no-builder-class': () => false,
     }
     const builtComponents = buildComponents(
@@ -109,7 +126,10 @@ describe('buildComponents', () => {
       $: () => [element],
     }
     const components = {
-      '.some-class': () => [<Button />, {type: 'submit'}],
+      '.some-class': () => ({
+        component: <Button />,
+        data: {type: 'submit'},
+      }),
     }
     const builtComponents = buildComponents(
       view,

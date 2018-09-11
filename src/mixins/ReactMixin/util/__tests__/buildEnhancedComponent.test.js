@@ -7,7 +7,11 @@ describe('buildEnhancedComponent', () => {
     const Button = () => <button>Click Me</button>
     const data = {type: 'submit'}
     const selector = ({type}) => type
-    const component = buildEnhancedComponent(<Button />, data, selector)
+    const component = buildEnhancedComponent({
+      component: <Button />,
+      data,
+      selector,
+    })
     expect(component).toEqual(
       <EnhancedComponent
         component={<Button />}
