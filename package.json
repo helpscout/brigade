@@ -9,7 +9,8 @@
     "format": "zero format",
     "validate": "zero validate",
     "precommit": "zero precommit",
-    "test": "zero test"
+    "test": "zero test",
+    "test:coverage": "zero test --coverage"
   },
   "repository": {
     "type": "git",
