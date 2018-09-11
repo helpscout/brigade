@@ -8,7 +8,8 @@
     "lint": "zero lint",
     "format": "zero format",
     "validate": "zero validate",
-    "precommit": "zero precommit"
+    "precommit": "zero precommit",
+    "test": "zero test"
   },
   "repository": {
     "type": "git",
@@ -27,7 +28,11 @@
   },
   "homepage": "https://github.com/helpscout/brigade#readme",
   "devDependencies": {
-    "@helpscout/zero": "0.0.9"
+    "@helpscout/zero": "0.0.9",
+    "backbone": "^1.3.3",
+    "backbone.cocktail": "^0.5.15",
+    "react": "^16.5.0",
+    "react-dom": "^16.5.0"
   },
   "peerDependencies": {
     "backbone": "^1.3.3",
