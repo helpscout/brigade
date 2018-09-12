@@ -2,6 +2,7 @@
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 - [Brigade](#brigade)
+  - [Table of Contents](#table-of-contents)
   - [What is Brigade?](#what-is-brigade)
   - [Is Brigade for me?](#is-brigade-for-me)
   - [Dependencies](#dependencies)
@@ -12,9 +13,18 @@
 
 # Brigade
 
-[![Build Status](https://travis-ci.org/helpscout/brigade.svg?branch=master)](https://travis-ci.org/helpscout/brigade) [![Coverage Status](https://coveralls.io/repos/github/helpscout/brigade/badge.svg?branch=master)](https://coveralls.io/github/helpscout/brigade?branch=master)
+[![Build Status](https://travis-ci.org/helpscout/brigade.svg?branch=master)](https://travis-ci.org/helpscout/brigade) [![Coverage Status](https://coveralls.io/repos/github/helpscout/brigade/badge.svg?branch=master)](https://coveralls.io/github/%40helpscout%2Fbrigade?branch=master) [![npm version](https://badge.fury.io/js/%40helpscout%2Fbrigade.svg)](https://badge.fury.io/js/loggi)
 
 > Backbone-controlled React components
+
+## Table of Contents
+
+- [Brigade](#brigade)
+  - [What is Brigade?](#what-is-brigade)
+  - [Is Brigade for me?](#is-brigade-for-me)
+  - [Dependencies](#dependencies)
+  - [Installation](#installation)
+  - [Usage](#usage)
 
 ## What is Brigade?
 
