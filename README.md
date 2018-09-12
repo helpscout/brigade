@@ -245,3 +245,7 @@ class Header extends React.PureComponent {
   }
 }
 ```
+
+Here's what our code sample looks like in action.
+
+![Demo](https://dha4w82d62smt.cloudfront.net/items/0x2D0x3V2i0L1T133c47/Screen%20Recording%202018-09-12%20at%2012.03%20AM.gif?X-CloudApp-Visitor-Id=2338876&v=71300246)
