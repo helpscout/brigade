@@ -5,7 +5,6 @@
   "main": "dist/index.js",
   "scripts": {
     "build": "zero build",
-    "bundle": "zero build bundle",
     "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "postversion": "npm publish",
     "lint": "zero lint",
@@ -14,7 +13,8 @@
     "precommit": "zero precommit",
     "test": "zero test --coverage",
     "test:watch": "zero test --watch",
-    "version": "npm run build"
+    "version": "npm run build",
+    "release": "np --no-yarn --no-publish"
   },
   "repository": {
     "type": "git",
