@@ -1,4 +1,4 @@
-# Brigade
+# ⛑️ Brigade
 
 [![Build Status](https://travis-ci.org/helpscout/brigade.svg?branch=master)](https://travis-ci.org/helpscout/brigade) [![Coverage Status](https://coveralls.io/repos/github/helpscout/brigade/badge.svg?branch=master)](https://coveralls.io/github/%40helpscout%2Fbrigade?branch=master) [![npm version](https://badge.fury.io/js/%40helpscout%2Fbrigade.svg)](https://badge.fury.io/js/loggi)
 
