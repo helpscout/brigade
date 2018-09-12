@@ -21,9 +21,9 @@
 Brigade is a library that enhances Backbone/Marionette views providing
 consumers with a declarative interface to:
 
-- Mount one or more React components into a Backbone/Marionette view.
-- Syncronize the React components with the state of Backbone models.
-- Reduce synchronized state to the props that your React components require.
+- Mount one or more React components into a Backbone/Marionette view
+- Syncronize the React components with the state of Backbone models
+- Reduce synchronized state to computed/derived props that your React components require
 
 ## Is Brigade for me?
 
@@ -57,11 +57,11 @@ npm install @helpscout/brigade
 
 Create a Backbone or Marionette view and add a `components` property. The
 `components` property should be a set of key-value pairs, where the key is
-a `selector` and the value is a `builder` function.
+a `CSS selector` and the value is a `builder function`.
 
-The `selector` should correspond to an element in your Backbone/Marionette
-view's template. This is where there component returned from the `builder`
-function will be mounted.
+The `CSS selector` should correspond to an element in your Backbone/Marionette
+view template. This is where the component returned from the `builder function`
+will be mounted.
 
 For the builder function, it is important that you do not use an anonymous
 function as the function will be executed in the incorrect context.
@@ -72,13 +72,13 @@ The builder function you supply can return one of two types:
 2. An object with a `component` key, an optional `data` key, and an
    optional `selector` key.
 
-The `component` should be a valid React component and may contain props which
-will be preserved unless they are overridden.
+The `component` should be a valid `React component`. It may include props which
+will be preserved unless they are overridden by the `data`/`selector`.
 
 The `data` should be set of key-value pairs. By default, the data is spread as
-props to the component and it will be merged with the component props.
+props to the `component` and it will be merged with the `component` props.
 
-You may include Backbone models in the data. This is what makes it interesting.
+You may include Backbone models in the `data`. This is what makes it interesting.
 `.toJSON()` is called on Backbone models before passing them as props. Also,
 the Backbone models are subscribed to for changes and on change, they will
 update the store, resulting in the component receiving new props. In this way,
@@ -86,14 +86,14 @@ the React component can be automatically kept in sync with the model.
 
 The `data` can include more than one model. You can also mixin other
 values into `data`. On its own, that is not interesting, since you can pass
-props to the component, but it is interesting when a `selector` function is
+props to the `component`, but it is interesting when a `selector` function is
 provided.
 
-The `selector` function takes `data` (with models cast to JSON) as its
-argument and returns a new set of key-value pairs. This allows you to reduce
-the `data` to the specific props required of the component, as well as to include
-computed or derived data, that may or may not dependent on other values found in
-the `data`.
+The `selector` function takes the `data` (with the models cast to JSON) as its
+argument and returns a new set of key-value pairs that are derived/computed
+from the `data`.
+
+The `selector` function was inspired by the [Reselect selector library](https://github.com/reduxjs/reselect).
 
 That may be a lot to take in, so an example may prove helpful:
 
