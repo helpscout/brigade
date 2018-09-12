@@ -55,8 +55,8 @@ npm install @helpscout/brigade
 
 ## Usage
 
-Create a Backbone or Marionette view and add a components property. The
-components property should be a set of key-value pairs, where the key is
+Create a Backbone or Marionette view and add a `components` property. The
+`components` property should be a set of key-value pairs, where the key is
 a `selector` and the value is a `builder` function.
 
 The `selector` should correspond to an element in your Backbone/Marionette
