@@ -116,10 +116,8 @@ const FormView = Marionette.View.extend({
           let title;
           if (name && email) {
             title = `${name} (${email})`;
-          } else if (name) {
-            title = name;
-          } else if (email) {
-            title = email;
+          } else if (name || email) {
+            title = name || email;
           } else {
             title = "Unknown Person";
           }
