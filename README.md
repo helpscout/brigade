@@ -81,8 +81,8 @@ props to the component and it will be merged with the component props.
 You may include Backbone models in the data. This is what makes it interesting.
 `.toJSON()` is called on Backbone models before passing them as props. Also,
 the Backbone models are subscribed to for changes and on change, they will
-update store, resulting in the component receiving new props. In this way, the
-React component can be automatically kept in sync with the model.
+update the store, resulting in the component receiving new props. In this way,
+the React component can be automatically kept in sync with the model.
 
 The `data` can include more than one model. You can also mixin other
 values into `data`. On its own, that is not interesting, since you can pass
@@ -177,4 +177,72 @@ import brigade from "@helpscout/brigade";
 ...
 
 brigade(FormView);
+```
+
+For completeness sake, here's an example `Form` component.
+
+```
+class Form extends React.PureComponent {
+  constructor(props) {
+    super(props);
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(e, key) {
+    const { onChange } = this.props;
+    e && e.preventDefault();
+    onChange(key, e.target.value);
+  }
+
+  handleSubmit(e) {
+    const { onSubmit } = this.props;
+    e && e.preventDefault();
+    onSubmit();
+  }
+
+  render() {
+    const { person } = this.props;
+
+    return (
+      <form onSubmit={this.handleSubmit}>
+        <div>
+          <label>First Name</label>
+          <input
+            value={person.firstName}
+            onChange={e => this.handleChange(e, "firstName")}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Last Name</label>
+          <input
+            value={person.lastName}
+            onChange={e => this.handleChange(e, "lastName")}
+          />
+        </div>
+        <div className="mb-3">
+          <label>Email Address</label>
+          <input
+            value={person.email}
+            onChange={e => this.handleChange(e, "email")}
+          />
+        </div>
+        <div>
+          <button>Submit</button>
+        </div>
+      </form>
+    );
+  }
+}
+```
+
+And `Header` component:
+
+```
+class Header extends React.PureComponent {
+  render() {
+    return <h1>{this.props.title}</h1>;
+  }
+}
 ```
