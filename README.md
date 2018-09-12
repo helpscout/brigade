@@ -161,7 +161,7 @@ const FormView = Marionette.View.extend({
 In the above example, you will note that two React components are mounted.
 Both components watch for changes to the model. The `Form` component recieves
 the person model cast as JSON as its prop. The `Header` component receives the
-`title` string as its prop, which is return value of the `selector` it is
+`title` string as its prop, which is the return value of the `selector` it is
 provided.
 
 You will also notice that the form component receives two actions as props
@@ -236,7 +236,7 @@ class Form extends React.PureComponent {
 }
 ```
 
-And `Header` component:
+And the `Header` component:
 
 ```jsx
 class Header extends React.PureComponent {
