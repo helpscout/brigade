@@ -97,31 +97,32 @@ the `data`.
 
 That may be a lot to take in, so an example may prove helpful:
 
-```
+```jsx
 const FormView = Marionette.View.extend({
   components: {
-    "#form": function() {
+    "#form"() {
       return {
         component: <Form onChange={this.handleChange} onSubmit={this.handleSubmit} />,
         data: { person: this.model }
-      };
+      }
     },
-    "#header": function() {
+    "#header"() {
       return {
         component: <Header />,
         data: { person: this.model },
-        selector: ({ person }) => {
-          const { firstName, lastName, email } = person;
-          const name = `${firstName} ${lastName}`.trim();
-          let title;
-          if (name && email) {
-            title = `${name} (${email})`;
-          } else if (name || email) {
-            title = name || email;
-          } else {
-            title = "Unknown Person";
+        selector: ({ person: { firstName, lastName, email } }) => {
+          return {
+            title: (() => {
+              const name = `${firstName} ${lastName}`.trim();
+              if (name && email) {
+                return `${name} <${email}>`;
+              } else if (name || email) {
+                return name || email;
+              } else {
+                return "Unknown Person"
+              }
+            })()
           }
-          return { title };
         }
       };
     }
@@ -169,7 +170,7 @@ which are used to interact with the model.
 To make all of this work, we need only call the `brigade` function on the
 view.
 
-```
+```js
 import brigade from "@helpscout/brigade";
 
 ...
@@ -179,29 +180,29 @@ brigade(FormView);
 
 For completeness sake, here's an example `Form` component.
 
-```
+```jsx
 class Form extends React.PureComponent {
   constructor(props) {
-    super(props);
+    super(props)
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this)
+    this.handleSubmit = this.handleSubmit.bind(this)
   }
 
   handleChange(e, key) {
-    const { onChange } = this.props;
-    e && e.preventDefault();
-    onChange(key, e.target.value);
+    const {onChange} = this.props
+    e && e.preventDefault()
+    onChange(key, e.target.value)
   }
 
   handleSubmit(e) {
-    const { onSubmit } = this.props;
-    e && e.preventDefault();
-    onSubmit();
+    const {onSubmit} = this.props
+    e && e.preventDefault()
+    onSubmit()
   }
 
   render() {
-    const { person } = this.props;
+    const {person} = this.props
 
     return (
       <form onSubmit={this.handleSubmit}>
@@ -209,38 +210,38 @@ class Form extends React.PureComponent {
           <label>First Name</label>
           <input
             value={person.firstName}
-            onChange={e => this.handleChange(e, "firstName")}
+            onChange={e => this.handleChange(e, 'firstName')}
           />
         </div>
         <div className="mb-3">
           <label>Last Name</label>
           <input
             value={person.lastName}
-            onChange={e => this.handleChange(e, "lastName")}
+            onChange={e => this.handleChange(e, 'lastName')}
           />
         </div>
         <div className="mb-3">
           <label>Email Address</label>
           <input
             value={person.email}
-            onChange={e => this.handleChange(e, "email")}
+            onChange={e => this.handleChange(e, 'email')}
           />
         </div>
         <div>
           <button>Submit</button>
         </div>
       </form>
-    );
+    )
   }
 }
 ```
 
 And `Header` component:
 
-```
+```jsx
 class Header extends React.PureComponent {
   render() {
-    return <h1>{this.props.title}</h1>;
+    return <h1>{this.props.title}</h1>
   }
 }
 ```
