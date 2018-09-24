@@ -14,7 +14,7 @@ describe('getCollections', () => {
     expect(getCollections()).toEqual([])
   })
 
-  test('shoudl return an empty array if there are no collections', () => {
+  test('should return an empty array if there are no collections', () => {
     expect(getCollections(data)).toEqual([])
   })
 
