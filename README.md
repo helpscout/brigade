@@ -79,16 +79,19 @@ will be preserved unless they are overridden by the `data`/`selector`.
 The `data` should be set of key-value pairs. By default, the data is spread as
 props to the `component` and it will be merged with the `component` props.
 
-You may include Backbone models in the `data`. This is what makes it interesting.
-`.toJSON()` is called on Backbone models before passing them as props. Also,
-the Backbone models are subscribed to for changes and on change, they will
-update the store, resulting in the component receiving new props. In this way,
-the React component can be automatically kept in sync with the model.
+You may include Backbone models and collections in the `data`. This is what
+makes Brigade interesting. The `toJSON()` method is called on Backbone models
+and collections before passing them as props. Models are subscribed to for
+changes and on-change, the store will be updated resulting in the component
+receiving new props. Likewise, collections are subscribed to such that the
+store will recive new props when a model is added to a collection, when a model
+is removed from a collection, when a model changes in a collection, and when
+a collection is reset. In this way, the React component can be automatically
+kept in sync with the model and/or collection.
 
-The `data` can include more than one model. You can also mixin other
-values into `data`. On its own, that is not interesting, since you can pass
-props to the `component`, but it is interesting when a `selector` function is
-provided.
+The `data` can include more then one model and/or collection. You can also
+mixin other values into `data`. This is a particularly interesting feature when
+combined with a `selector` function.
 
 The `selector` function takes the `data` (with the models cast to JSON) as its
 argument and returns a new set of key-value pairs that are derived/computed
