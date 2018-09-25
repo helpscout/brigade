@@ -1,5 +1,7 @@
 Todo:
+  ☐ Create ReactView (Marionette)
   ☐ Add Storybook for examples
-  ☐ Support `collections` in `data`
   ☐ Utilize context to support `actions`
   ☐ Support custom triggers to force getting new props for internal state
+  ☐ Customize events that trigger recomputing state
+  ☐ Memoize selector
