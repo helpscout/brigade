@@ -82,12 +82,12 @@ props to the `component` and it will be merged with the `component` props.
 You may include Backbone models and collections in the `data`. This is what
 makes Brigade interesting. The `toJSON()` method is called on Backbone models
 and collections before passing them as props. Models are subscribed to for
-changes and on-change, the store will updated resulting in the component
+changes and on-change, the store will be updated resulting in the component
 receiving new props. Likewise, collections are subscribed to such that the
 store will recive new props when a model is added to a collection, when a model
 is removed from a collection, when a model changes in a collection, and when
 a collection is reset. In this way, the React component can be automatically
-kept in sync with the model.
+kept in sync with the model and/or collection.
 
 The `data` can include more then one model and/or collection. You can also
 mixin other values into `data`. This is a particularly interesting feature when
