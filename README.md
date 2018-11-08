@@ -1,20 +1,21 @@
+# ⛑️ Brigade
+
+[![Build Status](https://travis-ci.org/helpscout/brigade.svg?branch=master)](https://travis-ci.org/helpscout/brigade) [![Coverage Status](https://coveralls.io/repos/github/helpscout/brigade/badge.svg?branch=master)](https://coveralls.io/github/%40helpscout%2Fbrigade?branch=master) [![npm version](https://badge.fury.io/js/%40helpscout%2Fbrigade.svg)](https://badge.fury.io/js/loggi)
+
+> Backbone-controlled React components
+
+## Table of Contents
+
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
-- [Brigade](#brigade)
-  - [What is Brigade?](#what-is-brigade)
-  - [Is Brigade for me?](#is-brigade-for-me)
-  - [Dependencies](#dependencies)
-  - [Installation](#installation)
-  - [Usage](#usage)
+- [What is Brigade?](#what-is-brigade)
+- [Is Brigade for me?](#is-brigade-for-me)
+- [Dependencies](#dependencies)
+- [Installation](#installation)
+- [Usage](#usage)
 
 <!-- END doctoc generated TOC please keep comment here to allow auto update -->
-
-# Brigade
-
-[![Build Status](https://travis-ci.org/helpscout/brigade.svg?branch=master)](https://travis-ci.org/helpscout/brigade) [![Coverage Status](https://coveralls.io/repos/github/helpscout/brigade/badge.svg?branch=master)](https://coveralls.io/github/helpscout/brigade?branch=master)
-
-> Backbone-controlled React components
 
 ## What is Brigade?
 
@@ -78,16 +79,19 @@ will be preserved unless they are overridden by the `data`/`selector`.
 The `data` should be set of key-value pairs. By default, the data is spread as
 props to the `component` and it will be merged with the `component` props.
 
-You may include Backbone models in the `data`. This is what makes it interesting.
-`.toJSON()` is called on Backbone models before passing them as props. Also,
-the Backbone models are subscribed to for changes and on change, they will
-update the store, resulting in the component receiving new props. In this way,
-the React component can be automatically kept in sync with the model.
+You may include Backbone models and collections in the `data`. This is what
+makes Brigade interesting. The `toJSON()` method is called on Backbone models
+and collections before passing them as props. Models are subscribed to for
+changes and on-change, the store will be updated resulting in the component
+receiving new props. Likewise, collections are subscribed to such that the
+store will recive new props when a model is added to a collection, when a model
+is removed from a collection, when a model changes in a collection, and when
+a collection is reset. In this way, the React component can be automatically
+kept in sync with the model and/or collection.
 
-The `data` can include more than one model. You can also mixin other
-values into `data`. On its own, that is not interesting, since you can pass
-props to the `component`, but it is interesting when a `selector` function is
-provided.
+The `data` can include more then one model and/or collection. You can also
+mixin other values into `data`. This is a particularly interesting feature when
+combined with a `selector` function.
 
 The `selector` function takes the `data` (with the models cast to JSON) as its
 argument and returns a new set of key-value pairs that are derived/computed

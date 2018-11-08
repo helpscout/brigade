@@ -1,13 +1,17 @@
 import React, {Component} from 'react'
-import {getModels, transformDataToProps} from './util'
+import {getCollections, getModels, transformDataToProps} from './util'
 import createStore from '../createStore'
 import Provider from '../Provider'
 import {isConnectedComponent} from '../connect/utils'
+
+const COLLECTION_EVENTS = 'add change remove reset'
+const MODEL_EVENTS = 'change'
 
 class EnhancedComponent extends Component {
   constructor(props) {
     super(props)
     this.state = this.getPropsForState()
+    this.collections = getCollections(props.data)
     this.models = getModels(props.data)
     this.store = createStore(props.data)
   }
@@ -64,14 +68,20 @@ class EnhancedComponent extends Component {
   }
 
   unwatch() {
+    this.collections.forEach(collection => {
+      collection.off(COLLECTION_EVENTS, this.updatePropsInState, this)
+    })
     this.models.forEach(model => {
-      model.off('change', this.updatePropsInState, this)
+      model.off(MODEL_EVENTS, this.updatePropsInState, this)
     })
   }
 
   watch() {
+    this.collections.forEach(collection => {
+      collection.on(COLLECTION_EVENTS, this.updatePropsInState, this)
+    })
     this.models.forEach(model => {
-      model.on('change', this.updatePropsInState, this)
+      model.on(MODEL_EVENTS, this.updatePropsInState, this)
     })
   }
 }

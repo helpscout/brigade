@@ -7,6 +7,7 @@ describe('getModels', () => {
     string: 'some string',
     array: [1, 2, 3],
     object: {some: 'Object'},
+    collection: new Backbone.Collection([new Backbone.Model({id: 1})]),
   }
 
   test('should return an empty array by default', () => {
