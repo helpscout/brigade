@@ -1,11 +1,15 @@
 import React, {Component} from 'react'
 import {getModels, transformDataToProps} from './util'
+import createStore from '../createStore'
+import Provider from '../Provider'
+import {isConnectedComponent} from '../connect/utils'
 
 class EnhancedComponent extends Component {
   constructor(props) {
     super(props)
     this.state = this.getPropsForState()
     this.models = getModels(props.data)
+    this.store = createStore(props.data)
   }
 
   componentDidMount() {
@@ -16,10 +20,33 @@ class EnhancedComponent extends Component {
     this.unwatch()
   }
 
-  render() {
+  shouldUpdateState = () => {
+    const {component, useStore} = this.props
+
+    return !useStore && !isConnectedComponent(component)
+  }
+
+  renderComponent = () => {
     const {component} = this.props
     const {...props} = this.state
-    return React.cloneElement(component, props)
+
+    if (isConnectedComponent(component)) {
+      if (React.isValidElement(component)) {
+        return component
+      } else {
+        return React.createElement(component)
+      }
+    }
+
+    if (React.isValidElement(component)) {
+      return React.cloneElement(component, props)
+    } else {
+      return React.createElement(component, props)
+    }
+  }
+
+  render() {
+    return <Provider store={this.store}>{this.renderComponent()}</Provider>
   }
 
   getPropsForState() {
@@ -28,10 +55,12 @@ class EnhancedComponent extends Component {
   }
 
   updatePropsInState() {
-    const props = this.getPropsForState()
-    this.setState({
-      ...props,
-    })
+    if (this.shouldUpdateState()) {
+      const props = this.getPropsForState()
+      this.setState({
+        ...props,
+      })
+    }
   }
 
   unwatch() {

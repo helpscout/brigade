@@ -24,7 +24,7 @@ export class BrigadeStore {
     const props = nextModel.toJSON()
 
     this.__store.setState({
-      member: props,
+      [key]: props,
     })
   }
 
