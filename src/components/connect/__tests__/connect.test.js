@@ -94,4 +94,74 @@ describe('connect', () => {
     metronome.simulate('click')
     expect(store.getState().bpm).toBe(800)
   })
+
+  test('should update store collection via actions', () => {
+    const members = new Backbone.Collection([
+      {
+        firstName: 'Skwisgaar',
+        lastName: 'Skwigelf',
+        id: 'skiwsgaar',
+      },
+    ])
+
+    const store = createStore({
+      members,
+    })
+
+    const Dethklok = ({members, addMember}) => (
+      <div className="dethklok">
+        <div className="members">
+          {members.map(member => (
+            <div key={member.id} className="member">
+              {member.firstName}
+            </div>
+          ))}
+        </div>
+        <button onClick={addMember}>Add Member</button>
+      </div>
+    )
+
+    const mapStateToProps = state => {
+      const {members} = state
+      return {
+        members,
+      }
+    }
+
+    const addMember = () => {
+      // Let's do it with the Backbone collection rather than React store
+      // Cause. Why not!
+      members.add({
+        firstName: 'Toki',
+        lastName: 'Wartooth',
+        id: 'toki',
+      })
+    }
+
+    const ConnectedDethklok = connect(
+      mapStateToProps,
+      {addMember},
+    )(Dethklok)
+
+    const wrapper = mount(
+      <Provider store={store}>
+        <div className="SomeBrutalVenue">
+          <ConnectedDethklok />
+        </div>
+      </Provider>,
+    )
+
+    const el = wrapper.find('div.members')
+    expect(el.text()).toContain('Skwisgaar')
+    expect(wrapper.find('div.member').length).toBe(1)
+
+    const add = wrapper.find('button')
+
+    add.simulate('click')
+
+    expect(el.text()).toContain('Skwisgaar')
+    expect(el.text()).toContain('Toki')
+
+    expect(wrapper.find('div.member').length).toBe(2)
+  })
 })

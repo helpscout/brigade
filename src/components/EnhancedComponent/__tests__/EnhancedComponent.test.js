@@ -380,4 +380,88 @@ describe('EnhancedComponent', () => {
 
     expect(c.text()).toBe('Three')
   })
+
+  test('should not re-render on collection change if rendering connected component', () => {
+    const mapStateToProps = state => {
+      return {
+        members: state.members,
+      }
+    }
+
+    const MembersList = ({members}) => (
+      <div className="members">
+        {members.map(member => (
+          <div className="member" key={member.id}>
+            {member.firstName}
+          </div>
+        ))}
+      </div>
+    )
+    const ConnectedMembersList = connect(mapStateToProps)(MembersList)
+
+    const App = () => {
+      return (
+        <div>
+          <section>
+            <ConnectedMembersList />
+          </section>
+        </div>
+      )
+    }
+    const ConnectedApp = connect()(App)
+
+    const members = new Backbone.Collection([
+      {
+        firstName: 'Skwisgaar',
+        lastName: 'Skwigelf',
+        id: 'skiwsgaar',
+      },
+    ])
+
+    const data = {
+      members,
+    }
+
+    const spy = jest.fn()
+    const wrapper = mount(
+      <EnhancedComponent component={ConnectedApp} data={data} />,
+    )
+    wrapper.instance().render = spy
+
+    expect(wrapper.find('div.member').length).toBe(1)
+
+    members.add({
+      firstName: 'Toki',
+      lastName: 'Wartooth',
+      id: 'toki',
+    })
+
+    expect(spy).not.toHaveBeenCalled()
+    expect(wrapper.find('div.member').length).toBe(2)
+    expect(wrapper.find('div.members').text()).toContain('Toki')
+
+    members.add({
+      firstName: 'William',
+      lastName: 'Murderface',
+      id: 'murderface',
+    })
+
+    expect(spy).not.toHaveBeenCalled()
+    expect(wrapper.find('div.member').length).toBe(3)
+    expect(wrapper.find('div.members').text()).toContain('William')
+
+    members.findWhere({id: 'murderface'}).set({
+      firstName: 'Murderface',
+    })
+
+    expect(spy).not.toHaveBeenCalled()
+    expect(wrapper.find('div.member').length).toBe(3)
+    expect(wrapper.find('div.members').text()).toContain('Murderface')
+
+    members.remove({id: 'murderface'})
+
+    expect(spy).not.toHaveBeenCalled()
+    expect(wrapper.find('div.member').length).toBe(2)
+    expect(wrapper.find('div.members').text()).not.toContain('Murderface')
+  })
 })
