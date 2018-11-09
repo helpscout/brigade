@@ -1,6 +1,12 @@
 import unistoreCreateStore from 'unistore'
 import transformDataToProps from '../EnhancedComponent/util/transformDataToProps'
-import {BRIGADE_MODEL_KEY, getModelsFromProps} from './utils'
+import {
+  BRIGADE_MODEL_KEY,
+  COLLECTION_EVENTS,
+  MODEL_EVENTS,
+  getModelsFromProps,
+  getCollectionsFromProps,
+} from './utils'
 
 export class BrigadeStore {
   constructor(initialState) {
@@ -8,6 +14,7 @@ export class BrigadeStore {
     this.__store = unistoreCreateStore(transformDataToProps(initialState))
     this.initialState = initialState
     this.models = getModelsFromProps(initialState)
+    this.collections = getCollectionsFromProps(initialState)
 
     this.watch()
   }
@@ -17,11 +24,16 @@ export class BrigadeStore {
     this.unsubscribe()
   }
 
-  updatePropsFromModelChange(nextModel) {
-    const key = nextModel[BRIGADE_MODEL_KEY]
+  updatePropsFromBackboneChange(nextInstance) {
+    // Collection vs. Model check
+    const backboneInstance = nextInstance.collection
+      ? nextInstance.collection
+      : nextInstance
+
+    const key = backboneInstance[BRIGADE_MODEL_KEY]
     if (!key) return
 
-    const props = nextModel.toJSON()
+    const props = backboneInstance.toJSON()
 
     this.__store.setState({
       [key]: props,
@@ -29,14 +41,24 @@ export class BrigadeStore {
   }
 
   unwatch() {
+    this.collections.forEach(collection => {
+      collection.off(
+        COLLECTION_EVENTS,
+        this.updatePropsFromBackboneChange,
+        this,
+      )
+    })
     this.models.forEach(model => {
-      model.off('change', this.updatePropsFromModelChange, this)
+      model.off(MODEL_EVENTS, this.updatePropsFromBackboneChange, this)
     })
   }
 
   watch() {
+    this.collections.forEach(collection => {
+      collection.on(COLLECTION_EVENTS, this.updatePropsFromBackboneChange, this)
+    })
     this.models.forEach(model => {
-      model.on('change', this.updatePropsFromModelChange, this)
+      model.on(MODEL_EVENTS, this.updatePropsFromBackboneChange, this)
     })
   }
 
