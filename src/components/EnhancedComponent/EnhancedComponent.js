@@ -1,5 +1,8 @@
 import React, {Component} from 'react'
 import {getCollections, getModels, transformDataToProps} from './util'
+import createStore from '../createStore'
+import Provider from '../Provider'
+import {isConnectedComponent} from '../connect/utils'
 
 const COLLECTION_EVENTS = 'add change remove reset'
 const MODEL_EVENTS = 'change'
@@ -10,6 +13,7 @@ class EnhancedComponent extends Component {
     this.state = this.getPropsForState()
     this.collections = getCollections(props.data)
     this.models = getModels(props.data)
+    this.store = createStore(props.data)
   }
 
   componentDidMount() {
@@ -20,10 +24,33 @@ class EnhancedComponent extends Component {
     this.unwatch()
   }
 
-  render() {
+  shouldUpdateState = () => {
+    const {component, useStore} = this.props
+
+    return !useStore && !isConnectedComponent(component)
+  }
+
+  renderComponent = () => {
     const {component} = this.props
     const {...props} = this.state
-    return React.cloneElement(component, props)
+
+    if (isConnectedComponent(component)) {
+      if (React.isValidElement(component)) {
+        return component
+      } else {
+        return React.createElement(component)
+      }
+    }
+
+    if (React.isValidElement(component)) {
+      return React.cloneElement(component, props)
+    } else {
+      return React.createElement(component, props)
+    }
+  }
+
+  render() {
+    return <Provider store={this.store}>{this.renderComponent()}</Provider>
   }
 
   getPropsForState() {
@@ -32,10 +59,12 @@ class EnhancedComponent extends Component {
   }
 
   updatePropsInState() {
-    const props = this.getPropsForState()
-    this.setState({
-      ...props,
-    })
+    if (this.shouldUpdateState()) {
+      const props = this.getPropsForState()
+      this.setState({
+        ...props,
+      })
+    }
   }
 
   unwatch() {
