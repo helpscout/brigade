@@ -435,6 +435,7 @@ describe('EnhancedComponent', () => {
       lastName: 'Wartooth',
       id: 'toki',
     })
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(2)
@@ -445,6 +446,7 @@ describe('EnhancedComponent', () => {
       lastName: 'Murderface',
       id: 'murderface',
     })
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(3)
@@ -459,6 +461,7 @@ describe('EnhancedComponent', () => {
     expect(wrapper.find('div.members').text()).toContain('Murderface')
 
     members.remove({id: 'murderface'})
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(2)
