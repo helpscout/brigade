@@ -1,5 +1,3 @@
 {
-  "presets": [
-    "@helpscout/zero/babel"
-  ]
+  "presets": ["@babel/env", "@babel/react"]
 }
