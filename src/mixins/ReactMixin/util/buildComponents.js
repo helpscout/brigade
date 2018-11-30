@@ -21,14 +21,13 @@ const buildComponents = (
         return undefined
       }
 
-      const result = builder.apply(view)
+      const result =
+        typeof builder === 'function' ? builder.apply(view) : builder
       if (!result) {
         return undefined
       }
 
-      if (React.isValidElement(result)) {
-        render(result, el)
-      } else if (result && result.component) {
+      if (result && (React.isValidElement(result) || result.component)) {
         render(buildEnhancedComponent(result), el)
       } else {
         return undefined
