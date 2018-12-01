@@ -11,7 +11,7 @@ export const TodoAppView = brigade(
     components() {
       return {
         '#page': {
-          component: <TodoApp title="Todo List" />,
+          component: TodoApp,
           initialState: {
             todos: this.todos,
           },

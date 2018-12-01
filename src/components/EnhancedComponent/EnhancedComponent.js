@@ -13,7 +13,7 @@ const MODEL_EVENTS = 'change'
 
 class EnhancedComponent extends Component {
   static propTypes = {
-    component: PropTypes.element.isRequired,
+    component: PropTypes.oneOfType([PropTypes.element.isRequired, PropTypes.func]),
     initialState: PropTypes.object,
     externalActions: PropTypes.object,
   }
