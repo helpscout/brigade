@@ -16,7 +16,9 @@
     "version": "npm run build",
     "release": "np --no-yarn --no-publish",
     "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
+    "build-storybook": "build-storybook",
+    "docz:dev": "docz dev",
+    "docz:build": "docz build"
   },
   "repository": {
     "type": "git",
@@ -47,6 +49,7 @@
     "backbone.cocktail": "^0.5.15",
     "backbone.marionette": "^4.0.0",
     "coveralls": "^3.0.2",
+    "docz": "^0.12.13",
     "enzyme": "3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.5.0",
