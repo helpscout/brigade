@@ -36,8 +36,6 @@
   "homepage": "https://github.com/helpscout/brigade#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
-    "@babel/preset-env": "^7.1.6",
-    "@babel/preset-react": "^7.0.0",
     "@helpscout/hsds-react": "^2.2.1",
     "@helpscout/zero": "0.0.9",
     "@storybook/addon-actions": "^4.0.9",
