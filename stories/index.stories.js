@@ -1,23 +1,14 @@
 import React from 'react'
+import { storiesOf } from '@storybook/react'
 
-import {storiesOf} from '@storybook/react'
-import {action} from '@storybook/addon-actions'
-import {linkTo} from '@storybook/addon-links'
+import AppWrapper from './components/AppWrapper'
+import BasicView from './views/BasicView'
+import ListView from './views/ListView'
+import ConnectedListView from './views/ConnectedListView'
+import TodoAppView from './views/TodoAppView'
 
-import {Button, Welcome} from '@storybook/react/demo'
-
-storiesOf('Welcome', module).add('to Storybook', () => (
-  <Welcome showApp={linkTo('Button')} />
-))
-
-storiesOf('Button', module)
-  .add('with text', () => (
-    <Button onClick={action('clicked')}>Hello Button</Button>
-  ))
-  .add('with some emoji', () => (
-    <Button onClick={action('clicked')}>
-      <span role="img" aria-label="so cool">
-        😀 😎 👍 💯
-      </span>
-    </Button>
-  ))
+storiesOf('Basic', module)
+  .add('Basic', () => <AppWrapper View={BasicView} />)
+  .add('Simple List', () => <AppWrapper View={ListView} />)
+  .add('Connected Simple List', () => <AppWrapper View={ConnectedListView} />)
+  .add('Connected Todo App', () => <AppWrapper View={TodoAppView} />)

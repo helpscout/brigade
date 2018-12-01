@@ -5,7 +5,7 @@ import Card from '@helpscout/hsds-react/components/Card'
 import Page from '@helpscout/hsds-react/components/Page'
 import connect from '../../src/components/connect'
 
-class ListComponent extends PureComponent {
+class List extends PureComponent {
   static propTypes = {
     addItem: PropTypes.func,
     items: PropTypes.array,
@@ -22,6 +22,8 @@ class ListComponent extends PureComponent {
     list: {},
     updateVersion: () => {},
   }
+
+  static displayName = 'List'
 
   render() {
     const {
@@ -58,11 +60,11 @@ class ListComponent extends PureComponent {
   }
 }
 
-export default ListComponent
+export default List
 
 const mapStateToProps = ({ items, list }) => ({
   items,
   list
 })
 const actions = store => store.getExternalActions()
-export const ConnectedListComponent = connect(mapStateToProps, actions)(ListComponent)
+export const ConnectedList = connect(mapStateToProps, actions)(List)

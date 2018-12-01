@@ -1,8 +1,19 @@
+import PropTypes from 'prop-types'
 import React, { Component } from 'react'
 import Input from '@helpscout/hsds-react/components/Input'
 import connect from '../../../src/components/connect'
 
 class TodoForm extends Component {
+  static propTypes = {
+    addTodo: PropTypes.func,
+  }
+
+  static defaultProps = {
+    addTodo: () => {},
+  }
+
+  static displayName = 'TodoForm'
+
   constructor(props) {
     super(props)
 
@@ -31,17 +42,20 @@ class TodoForm extends Component {
 
     return (
       <form onSubmit={this.handleSubmit} style={{marginBottom: "10px"}}>
-        <Input onChange={this.handleChange} value={value} />
+        <Input
+          onChange={this.handleChange}
+          placeholder="Enter a task"
+          value={value}
+        />
       </form>
     )
   }
 }
 
 const actions = store => {
-  const externalActions = store.getExternalActions()
-
+  const { addTodo } = store.getExternalActions()
   return {
-    addTodo: (_state, todo) => externalActions.addTodo(todo)
+    addTodo: (_state, todo) => addTodo(todo)
   }
 }
 

@@ -5,7 +5,7 @@ import Page from '@helpscout/hsds-react/components/Page'
 import TodoForm from './TodoForm'
 import TodoList from './TodoList'
 
-class TodoApp extends PureComponent {
+class App extends PureComponent {
   static propTypes = {
     title: PropTypes.string.isRequired,
   }
@@ -25,4 +25,4 @@ class TodoApp extends PureComponent {
   }
 }
 
-export default TodoApp
+export default App

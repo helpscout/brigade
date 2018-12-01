@@ -1,7 +1,9 @@
 import React, {PureComponent} from 'react'
 import Page from '@helpscout/hsds-react/components/Page'
 
-class BasicComponent extends PureComponent {
+class Basic extends PureComponent {
+  static displayName = 'Basic'
+
   render() {
     return (
       <Page>
@@ -13,4 +15,4 @@ class BasicComponent extends PureComponent {
   }
 }
 
-export default BasicComponent
+export default Basic
