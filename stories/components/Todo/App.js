@@ -8,11 +8,13 @@ class App extends PureComponent {
   render() {
     return (
       <Page>
-        <Page.Header title="Todo List" />
-        <Page.Content>
-          <TodoForm />
-          <TodoList />
-        </Page.Content>
+        <Page.Card>
+          <Page.Header title="Todo List" />
+          <Page.Content>
+            <TodoForm />
+            <TodoList />
+          </Page.Content>
+        </Page.Card>
       </Page>
     )
   }

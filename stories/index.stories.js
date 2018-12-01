@@ -7,7 +7,7 @@ import ListView from './views/ListView'
 import ConnectedListView from './views/ConnectedListView'
 import TodoAppView from './views/TodoAppView'
 
-storiesOf('Basic', module)
+storiesOf('Examples', module)
   .add('Basic', () => <AppWrapper View={BasicView} />)
   .add('Simple List', () => <AppWrapper View={ListView} />)
   .add('Connected Simple List', () => <AppWrapper View={ConnectedListView} />)
