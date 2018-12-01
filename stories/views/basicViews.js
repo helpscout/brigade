@@ -6,6 +6,7 @@ import brigade from '../../src'
 
 import BasicComponent from '../components/BasicComponent'
 import ListComponent, { ConnectedListComponent } from '../components/ListComponent'
+import TodoApp from '../components/TodoApp/TodoApp'
 
 const template = _.template('<div id="page"></div>')
 
@@ -98,6 +99,37 @@ export const ConnectedModelCollectionView = brigade(
 
     updateVersion() {
       this.list.set('version', this.list.get('version') + 1)
+    },
+
+    template,
+  })
+)
+
+export const TodoView = brigade(
+  Marionette.View.extend({
+    components() {
+      return {
+        '#page': {
+          component: <TodoApp title="Todo List" />,
+          initialState: {
+            todos: this.todos,
+          },
+          externalActions: {
+            addTodo: this.addTodo,
+          }
+        }
+      }
+    },
+
+    initialize() {
+      this.todos = new Backbone.Collection([
+        { id: Date.now(), task: 'Learn to use Brigade' },
+      ])
+      this.addTodo = this.addTodo.bind(this)
+    },
+
+    addTodo(todo) {
+      this.todos.add({ ...todo, id: Date.now() })
     },
 
     template,

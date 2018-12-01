@@ -4,7 +4,8 @@ import AppWrapper from './components/AppWrapper'
 import {
   BasicView,
   ConnectedModelCollectionView,
-  ModelCollectionView
+  ModelCollectionView,
+  TodoView
 } from './views/basicViews'
 
 storiesOf('Basic', module)
@@ -14,4 +15,7 @@ storiesOf('Basic', module)
   ))
   .add('Connected Model & Collection', () => (
     <AppWrapper View={ConnectedModelCollectionView} />
+  ))
+  .add('Todo App', () => (
+    <AppWrapper View={TodoView} />
   ))
