@@ -6,6 +6,15 @@ import {
   getEl,
 } from '.'
 
+/**
+ * Build the React components and mount them in the view at selectors.
+ *
+ * @param {Object} view
+ * @param {Object} components
+ * @param {function} buildEnhancedComponent
+ * @param {function} render
+ * @returns {array}
+ */
 const buildComponents = (
   view,
   components,
@@ -21,8 +30,10 @@ const buildComponents = (
         return undefined
       }
 
-      const result =
-        typeof builder === 'function' ? builder.apply(view) : builder
+      const result = typeof builder === 'function'
+        ? builder.apply(view)
+        : builder
+
       if (!result) {
         return undefined
       }
