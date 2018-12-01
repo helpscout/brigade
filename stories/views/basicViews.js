@@ -5,7 +5,7 @@ import React from 'react'
 import brigade from '../../src'
 
 import BasicComponent from '../components/BasicComponent'
-import ListComponent from '../components/ListComponent'
+import ListComponent, { ConnectedListComponent } from '../components/ListComponent'
 
 const template = _.template('<div id="page"></div>')
 
@@ -31,6 +31,50 @@ export const ModelCollectionView = brigade(
             updateVersion={this.updateVersion}
           />
         ),
+      }
+    },
+
+    initialize() {
+      this.items = new Backbone.Collection([
+        {id: 1, name: 'Item 1'},
+        {id: 2, name: 'Item 2'},
+      ])
+      this.list = new Backbone.Model({
+        name: 'Items',
+        version: 1,
+      })
+      this.addItem = this.addItem.bind(this)
+      this.updateVersion = this.updateVersion.bind(this)
+    },
+
+    addItem() {
+      const id = this.items.length + 1
+      this.items.add({id, name: `Item ${id}`})
+    },
+
+    updateVersion() {
+      this.list.set('version', this.list.get('version') + 1)
+    },
+
+    template,
+  })
+)
+
+export const ConnectedModelCollectionView = brigade(
+  Marionette.View.extend({
+    components() {
+      return {
+        '#page': {
+          component: <ConnectedListComponent />,
+          initialState: {
+            items: this.items,
+            list: this.list,
+          },
+          externalActions: {
+            addItem: this.addItem,
+            updateVersion: this.updateVersion,
+          }
+        }
       }
     },
 

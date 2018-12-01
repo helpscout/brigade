@@ -3,6 +3,7 @@ import React, {PureComponent} from 'react'
 import Button from '@helpscout/hsds-react/components/Button'
 import Card from '@helpscout/hsds-react/components/Card'
 import Page from '@helpscout/hsds-react/components/Page'
+import connect from '../../src/components/connect'
 
 class ListComponent extends PureComponent {
   static propTypes = {
@@ -58,3 +59,10 @@ class ListComponent extends PureComponent {
 }
 
 export default ListComponent
+
+const mapStateToProps = ({ items, list }) => ({
+  items,
+  list
+})
+const actions = store => store.getExternalActions()
+export const ConnectedListComponent = connect(mapStateToProps, actions)(ListComponent)

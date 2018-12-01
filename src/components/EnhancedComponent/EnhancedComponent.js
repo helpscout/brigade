@@ -1,9 +1,12 @@
 import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {getCollections, getModels, transformDataToProps} from './util'
+import {
+  getCollections,
+  getModels,
+  transformDataToProps
+} from './util'
 import createStore from '../createStore'
 import Provider from '../Provider'
-import {isConnectedComponent} from '../connect/utils'
 
 const COLLECTION_EVENTS = 'add change remove reset'
 const MODEL_EVENTS = 'change'
@@ -12,6 +15,12 @@ class EnhancedComponent extends Component {
   static propTypes = {
     component: PropTypes.element.isRequired,
     initialState: PropTypes.object,
+    externalActions: PropTypes.object,
+  }
+
+  static defaultProps = {
+    initialState: {},
+    externalActions: {},
   }
 
   static displayName = 'BrigadeEnhancedComponent'
@@ -21,11 +30,15 @@ class EnhancedComponent extends Component {
 
     const {
       component: {props: componentProps},
+      initialState,
+      externalActions,
     } = props
 
     this.state = transformDataToProps(componentProps)
     this.stateCollections = getCollections(componentProps)
     this.stateModels = getModels(componentProps)
+
+    this.store = createStore(initialState, externalActions)
   }
 
   componentDidMount() {
@@ -48,7 +61,11 @@ class EnhancedComponent extends Component {
   }
 
   render() {
-    return this.renderStateComponent()
+    return (
+      <Provider store={this.store}>
+        {this.renderStateComponent()}
+      </Provider>
+    )
   }
 
   updateState() {
