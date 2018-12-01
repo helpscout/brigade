@@ -98,28 +98,6 @@ describe('buildComponents', () => {
     expect(builtComponents).toHaveLength(1)
   })
 
-  test('should render a react component', () => {
-    const element = "<p class='some-class'></p>"
-    const view = {
-      $: () => [element],
-    }
-    const components = {
-      '.some-class': () => <Button />,
-    }
-    const builtComponents = buildComponents(
-      view,
-      components,
-      buildEnhancedComponent,
-      render,
-    )
-    expect(builtComponents).toBeDefined()
-    expect(builtComponents).toHaveLength(1)
-    expect(buildEnhancedComponent).not.toHaveBeenCalled()
-    expect(render).toHaveBeenCalled()
-    expect(render.mock.calls[0][0]).toEqual(components['.some-class']())
-    expect(render.mock.calls[0][1]).toEqual(element)
-  })
-
   test('should render an enhanced react component', () => {
     const element = "<p class='some-class'></p>"
     const view = {

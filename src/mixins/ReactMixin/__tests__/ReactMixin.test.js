@@ -4,6 +4,7 @@ import Backbone from 'backbone'
 import Cocktail from 'backbone.cocktail'
 import $ from 'jquery'
 import reactDom from 'react-dom'
+import connect from '../../../components/connect'
 
 describe('ReactMixin', () => {
   const documentBody = "<div id='app'></div>"
@@ -14,12 +15,16 @@ describe('ReactMixin', () => {
     </div>
   )
 
+  const mapStateToProps = ({ text }) => ({ text })
+
+  const ConnectedDummyComponent = connect(mapStateToProps)(DummyComponent)
+
   const ReactView = Backbone.View.extend({
     components: {
       '#region1': () => <DummyComponent text="Text 1" id="text1" />,
       '#region2': () => ({
-        component: <DummyComponent id="text2" />,
-        data: {text: 'Text 2'},
+        component: <ConnectedDummyComponent id="text2" />,
+        initialState: {text: 'Text 2'},
       }),
     },
     element: $('#app'),
