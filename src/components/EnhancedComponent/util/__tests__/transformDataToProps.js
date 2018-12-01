@@ -34,14 +34,4 @@ describe('transformDataToProps', () => {
   test('should return the given data with models cast to JSON', () => {
     expect(transformDataToProps(dataWithModels)).toEqual(dataWithJSON)
   })
-
-  test('should return a slice of the data when given a selector', () => {
-    const selector = ({number, string}) => ({number: number * 2, string})
-    const result = transformDataToProps(data, selector)
-    expect(result.number).toEqual(data.number * 2)
-    expect(result.string).toEqual(data.string)
-    expect(result.object).toBeUndefined()
-    expect(result.array).toBeUndefined()
-    expect(Object.keys(result)).toHaveLength(2)
-  })
 })
