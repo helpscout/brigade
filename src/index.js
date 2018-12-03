@@ -1,4 +1,4 @@
-import {reactMixin} from './mixins'
+import {ReactMixin} from './mixins'
 
 export {connect} from './components'
-export default reactMixin
+export default ReactMixin

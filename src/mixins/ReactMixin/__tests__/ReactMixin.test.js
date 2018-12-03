@@ -1,4 +1,4 @@
-import {reactMixin} from '..'
+import {ReactMixin} from '..'
 import React from 'react'
 import Backbone from 'backbone'
 import $ from 'jquery'
@@ -44,12 +44,12 @@ describe('ReactMixin', () => {
     },
   })
 
-  const ReactView = reactMixin(View)
+  const ReactView = ReactMixin(View)
 
   jest.useFakeTimers()
 
   test('_components should not be set if there are no components', () => {
-    const ReactView = reactMixin(Backbone.View)
+    const ReactView = ReactMixin(Backbone.View)
     const view = new ReactView()
     view.renderComponents()
     expect(view._components).toBeUndefined()
