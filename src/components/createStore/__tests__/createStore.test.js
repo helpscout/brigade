@@ -367,7 +367,7 @@ describe('createStore', () => {
       expect(spy).not.toHaveBeenCalled()
     })
 
-    test('should set and get an empty objects if no state or external actions provided', () => {
+    test('should set and get empty objects if no state or external actions provided', () => {
       const store = createStore()
       expect(store.getState()).toEqual({})
       expect(store.getExternalActions()).toEqual({})
