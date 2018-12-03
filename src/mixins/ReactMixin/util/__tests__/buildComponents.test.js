@@ -83,7 +83,7 @@ describe('buildComponents', () => {
       },
     }
     const components = {
-      '.some-class': () => ({component: <div />}),
+      '.some-class': {component: <div />},
       '.other-class': false,
       '.no-match-class': () => ({}),
       '.no-builder-class': () => false,
