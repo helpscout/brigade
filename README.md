@@ -41,7 +41,6 @@ project, then Brigade is not for you. In this case, try
 Brigade has the following peer dependencies:
 
 - [Backbone](https://www.npmjs.com/package/backbone)
-- [Cocktail](https://www.npmjs.com/package/backbone.cocktail)
 - [Marionette](https://www.npmjs.com/package/backbone.marionette) (Optional)
 - [React](https://www.npmjs.com/package/react)
 - [React DOM](https://www.npmjs.com/package/react-dom)

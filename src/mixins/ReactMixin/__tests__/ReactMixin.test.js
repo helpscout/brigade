@@ -1,7 +1,6 @@
-import {ReactMixin} from '..'
+import {reactMixin} from '..'
 import React from 'react'
 import Backbone from 'backbone'
-import Cocktail from 'backbone.cocktail'
 import $ from 'jquery'
 import reactDom from 'react-dom'
 import connect from '../../../components/connect'
@@ -15,11 +14,11 @@ describe('ReactMixin', () => {
     </div>
   )
 
-  const mapStateToProps = ({ text }) => ({ text })
+  const mapStateToProps = ({text}) => ({text})
 
   const ConnectedDummyComponent = connect(mapStateToProps)(DummyComponent)
 
-  const ReactView = Backbone.View.extend({
+  const View = Backbone.View.extend({
     components: {
       '#region1': () => <DummyComponent text="Text 1" id="text1" />,
       '#region2': () => ({
@@ -45,68 +44,40 @@ describe('ReactMixin', () => {
     },
   })
 
-  Cocktail.mixin(ReactView, ReactMixin)
+  const ReactView = reactMixin(View)
 
-  test("should invoke 'renderComponents' when the view is rendered", done => {
-    const mixin = {
-      ...ReactMixin,
-      renderComponents: jest.fn(),
-    }
-    const View = Backbone.View.extend({})
-    Cocktail.mixin(View, mixin)
-    const view = new View({})
-    view.trigger('render')
-    setTimeout(() => {
-      expect(mixin.renderComponents).toHaveBeenCalled()
-      done()
-    }, 1)
+  jest.useFakeTimers()
+
+  test('_components should not be set if there are no components', () => {
+    const ReactView = reactMixin(Backbone.View)
+    const view = new ReactView()
+    view.renderComponents()
+    expect(view._components).toBeUndefined()
   })
 
-  test("should invoke 'tearDownComponents' when the view is closed", done => {
-    const mixin = {
-      ...ReactMixin,
-      tearDownComponents: jest.fn(),
-    }
-    const View = Backbone.View.extend({})
-    Cocktail.mixin(View, mixin)
-    const view = new View()
-    view.trigger('close')
-    setTimeout(() => {
-      expect(mixin.tearDownComponents).toHaveBeenCalled()
-      done()
-    }, 1)
-  })
-
-  test('should mount React components when the view is rendered', done => {
+  test('should mount React components when the view is rendered', () => {
     document.body.innerHTML = documentBody
     const view = new ReactView({})
     view.render()
-    setTimeout(() => {
-      expect(view.$el.find('.dummy-component')).toHaveLength(2)
+    jest.runAllTimers()
+    expect(view.$el.find('.dummy-component')).toHaveLength(2)
 
-      const text1 = view.$el.find('#text1')
-      expect(text1).toHaveLength(1)
-      expect(text1.text()).toEqual('Was passed in text: Text 1')
+    const text1 = view.$el.find('#text1')
+    expect(text1).toHaveLength(1)
+    expect(text1.text()).toEqual('Was passed in text: Text 1')
 
-      const text2 = view.$el.find('#text2')
-      expect(text2).toHaveLength(1)
-      expect(text2.text()).toEqual('Was passed in text: Text 2')
-
-      done()
-    }, 1)
+    const text2 = view.$el.find('#text2')
+    expect(text2).toHaveLength(1)
+    expect(text2.text()).toEqual('Was passed in text: Text 2')
   })
 
-  test('should unmount React components when closed', done => {
+  test('should unmount React components when closed', () => {
     reactDom.unmountComponentAtNode = jest.fn()
     document.body.innerHTML = documentBody
     const view = new ReactView({})
     view.render()
-    setTimeout(() => {
-      view.close()
-      setTimeout(() => {
-        expect(reactDom.unmountComponentAtNode).toHaveBeenCalledTimes(2)
-        done()
-      }, 1)
-    }, 1)
+    view.close()
+    jest.runAllTimers()
+    expect(reactDom.unmountComponentAtNode).toHaveBeenCalledTimes(2)
   })
 })

@@ -2,29 +2,33 @@ import {unmountComponentAtNode} from 'react-dom'
 import {buildComponents} from './util'
 import {result} from '../../util'
 
-const ReactMixin = {
-  initialize: function() {
-    this.on('render', this.renderComponents, this)
-    this.on('close', this.tearDownComponents, this)
-  },
+export default View =>
+  View.extend({
+    initialize() {
+      View.prototype.initialize.apply(this, arguments)
+      this.on('render', this.renderComponents, this)
+      this.on('close', this.tearDownComponents, this)
+    },
 
-  renderComponents: function() {
-    this.tearDownComponents()
-    const components = result(this, 'components')
-    this._components = buildComponents(this, components)
-  },
+    renderComponents() {
+      if (!this.components) {
+        return
+      }
 
-  tearDownComponents: function() {
-    if (!this._components) {
-      return
-    }
+      this.tearDownComponents()
+      const components = result(this, 'components')
+      this._components = buildComponents(this, components)
+    },
 
-    this._components.forEach(el => {
-      unmountComponentAtNode(el)
-    })
+    tearDownComponents() {
+      if (!this._components) {
+        return
+      }
 
-    delete this._components
-  },
-}
+      this._components.forEach(el => {
+        unmountComponentAtNode(el)
+      })
 
-export default ReactMixin
+      delete this._components
+    },
+  })

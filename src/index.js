@@ -1,7 +1,4 @@
-import {applyMixin} from './util'
-import {ReactMixin} from './mixins'
-
-const brigade = view => applyMixin(view, ReactMixin)
+import {reactMixin} from './mixins'
 
 export {connect} from './components'
-export default brigade
+export default reactMixin
