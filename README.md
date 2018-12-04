@@ -55,7 +55,5 @@ npm install @helpscout/brigade
 
 ## Documentation
 
-```
-npm run storybook
-npm run docz:dev
-```
+Docs: [https://brigade.netlify.com](https://brigade.netlify.com)
+Storybook: [https://brigade-storybook.netlify.com](https://brigade-storybook.netlify.com)
