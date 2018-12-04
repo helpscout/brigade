@@ -2,6 +2,7 @@ import React from 'react'
 import {render as defaultRender} from 'react-dom'
 import {
   buildEnhancedComponent as defaultBuildEnhancedComponent,
+  evaluateBuilder,
   getBuilder,
   getEl,
 } from '.'
@@ -30,9 +31,7 @@ const buildComponents = (
         return undefined
       }
 
-      const result = typeof builder === 'function'
-        ? builder.apply(view)
-        : builder
+      const result = evaluateBuilder(builder, view)
 
       if (!result) {
         return undefined
