@@ -4,3 +4,113 @@ route: /components
 ---
 
 # Components
+
+Brigade enhances Backbone and Marionette Views with a `components` property
+or method. It can take a few shapes:
+
+```
+components: {
+  '#app': App,
+}
+```
+
+Above is the simplest form. It will mount the `App` component in the DOM at the
+first element that matches the `#app` selector.
+
+We refer to the keys here as `selectors` and the values as `builders`.
+
+
+```
+components: {
+  '#app': <App title="My App" />
+}
+```
+
+The above example works the same as the previous example, but here we have
+props that are being passed.
+
+You may note that you can use a React component class (e.g. `App`) or an
+instance of a React component (e.g. `<App />`).
+
+The problem with the above examples is that they will be executed in the context
+of Brigade, but in most cases we want them to be executed in the context of the
+view in which the `components` property or method is defined. This means we
+either have to make `components` an instance method on the view, or we have
+to make the builders into functions.
+
+```
+components() {
+  '#app': <App title={this.title} />
+}
+```
+
+```
+components: {
+  '#app': () => <App title={this.title} />
+}
+```
+
+In both of the above examples, the code will be executed in the context of the
+view and `this` will reference the instance of the view.
+
+```
+components() {
+  '#app': <App person={this.person}
+               people={this.people}
+               addPerson={this.addPerson}
+          />
+}
+```
+
+In the above example, `this.person` is a reference to a model and
+`this.people` is a reference to a collection. `this.addPerson` is a reference
+to an instance method on the view. This example highlights that we can pass
+models, collections, and actions into components via props, even actions that
+operate on those models and collections. When models and collections change,
+the React component is kept in sync.
+
+```
+components() {
+  '#app': App,
+  initialState: {
+    person: this.person,
+    people: this.people,
+  },
+  extraActions: {
+    addPerson: this.addPerson,
+  }
+}
+```
+
+Above is another way to accomplish the same thing. It is actually a much more
+powerful technique and ideal to use if you are mounting entire applications.
+We move models, collections and any other data into `initialState`. This data
+will be loaded into a store like we have seen in `Redux`. The models and
+collections are still kept in sync, so if they are modified outside the
+React component, their updates are reflected inside the React component.
+What's different now, is that we can use the `connect` component to connect
+the state in the store any arbitrary React component in our React app, meaning
+we don't have to have waterfall props. Similarly, we put methods into
+`extraActions` so we can map actions to props on any arbitrary React component.
+
+```
+import { connect } from '@helpscout/brigade'
+import Form from '../Form'
+
+const mapStateToProps = ({ person, people }) => ({ person, people })
+const actions = store => {
+  const { addPerson } = store.getExternalActions()
+  return {
+    addPerson: (state, person) => addPerson(person)
+  }
+}
+connect(mapStateToProps, addPerson)(Form)
+```
+
+The above example illustrates how we can grab state and actions out of the
+store from any component in our mounted React app using the `connect` HOC
+that ships with Brigade.
+
+You will note that actions are rebound to receive the current `state` as the
+first argument so if your external action does not accept that argument you
+will need to remap as shown in the above example.

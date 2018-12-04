@@ -55,4 +55,7 @@ npm install @helpscout/brigade
 
 ## Documentation
 
-Coming soon.
+```
+npm run storybook
+npm run docz:dev
+```
