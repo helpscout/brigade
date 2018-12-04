@@ -3,7 +3,8 @@ import React, {Component} from 'react'
 import {
   getCollections,
   getModels,
-  transformDataToProps
+  transformDataToProps,
+  makeWatchAll,
 } from './util'
 import createStore from '../createStore'
 import Provider from '../Provider'
@@ -13,7 +14,10 @@ const MODEL_EVENTS = 'change'
 
 class EnhancedComponent extends Component {
   static propTypes = {
-    component: PropTypes.oneOfType([PropTypes.element.isRequired, PropTypes.func]),
+    component: PropTypes.oneOfType([
+      PropTypes.element.isRequired,
+      PropTypes.func,
+    ]),
     initialState: PropTypes.object,
     externalActions: PropTypes.object,
   }
@@ -39,6 +43,8 @@ class EnhancedComponent extends Component {
     this.stateModels = getModels(componentProps)
 
     this.store = createStore(initialState, externalActions)
+
+    this.watchAll = makeWatchAll(this.updateState, this)
   }
 
   componentDidMount() {
@@ -61,11 +67,7 @@ class EnhancedComponent extends Component {
   }
 
   render() {
-    return (
-      <Provider store={this.store}>
-        {this.renderStateComponent()}
-      </Provider>
-    )
+    return <Provider store={this.store}>{this.renderStateComponent()}</Provider>
   }
 
   updateState() {
@@ -76,21 +78,13 @@ class EnhancedComponent extends Component {
   }
 
   unwatchState() {
-    this.stateCollections.forEach(collection => {
-      collection.off(COLLECTION_EVENTS, this.updateState, this)
-    })
-    this.stateModels.forEach(model => {
-      model.off(MODEL_EVENTS, this.updateState, this)
-    })
+    this.watchAll.off(this.stateCollections, COLLECTION_EVENTS)
+    this.watchAll.off(this.stateModels, MODEL_EVENTS)
   }
 
   watchState() {
-    this.stateCollections.forEach(collection => {
-      collection.on(COLLECTION_EVENTS, this.updateState, this)
-    })
-    this.stateModels.forEach(model => {
-      model.on(MODEL_EVENTS, this.updateState, this)
-    })
+    this.watchAll.on(this.stateCollections, COLLECTION_EVENTS)
+    this.watchAll.on(this.stateModels, MODEL_EVENTS)
   }
 }
 
