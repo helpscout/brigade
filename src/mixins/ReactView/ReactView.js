@@ -10,7 +10,7 @@ const ReactView = View =>
         console.warn('ReactView mixin is intended for use with ItemViews - behavior may not match expectations')
       }
       View.prototype.initialize.apply(this, args)
-      this.listenTo(this, 'close', () => this.teardownComponent())
+      this.listenTo(this, 'close', this.teardownComponent)
     },
 
     render() {
