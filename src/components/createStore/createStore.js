@@ -9,10 +9,11 @@ import {
 } from './utils'
 
 export class BrigadeStore {
-  constructor(initialState) {
+  constructor(initialState = {}, externalActions = {}) {
     // Secret store within the store
     this.__store = unistoreCreateStore(transformDataToProps(initialState))
     this.initialState = initialState
+    this.externalActions = externalActions
     this.models = getModelsFromProps(initialState)
     this.collections = getCollectionsFromProps(initialState)
 
@@ -62,6 +63,7 @@ export class BrigadeStore {
     })
   }
 
+  getExternalActions = () => this.externalActions
   getState = () => this.__store.getState()
   setState = newState => this.__store.setState(newState)
   action = action => this.__store.action(action)
@@ -69,8 +71,8 @@ export class BrigadeStore {
   unsubscribe = listener => this.__store.unsubscribe(listener)
 }
 
-const createStore = state => {
-  return new BrigadeStore(state)
+const createStore = (initialState, externalActions) => {
+  return new BrigadeStore(initialState, externalActions)
 }
 
 export default createStore

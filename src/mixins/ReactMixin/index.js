@@ -1,2 +1,2 @@
-import ReactMixin from "./ReactMixin";
-export { ReactMixin };
+import ReactMixin from './ReactMixin'
+export {ReactMixin}

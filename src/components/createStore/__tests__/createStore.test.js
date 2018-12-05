@@ -366,5 +366,20 @@ describe('createStore', () => {
 
       expect(spy).not.toHaveBeenCalled()
     })
+
+    test('should set and get empty objects if no state or external actions provided', () => {
+      const store = createStore()
+      expect(store.getState()).toEqual({})
+      expect(store.getExternalActions()).toEqual({})
+    })
+
+    test('should set and get external methods', () => {
+      const spy = jest.fn()
+      const store = createStore({}, {action: spy})
+      const actions = store.getExternalActions()
+      expect(Object.keys(actions)).toHaveLength(1)
+      actions.action()
+      expect(spy).toHaveBeenCalled()
+    })
   })
 })

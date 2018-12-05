@@ -9,184 +9,112 @@ describe('EnhancedComponent', () => {
   const Button = ({label}) => <button>{label}</button>
 
   test('should be able to render non-instantiated React components', () => {
-    const data = {
-      model: new Backbone.Model(),
-    }
-    data.model.on = jest.fn()
-    const wrapper = mount(<EnhancedComponent component={Button} data={data} />)
-
-    expect(data.model.on).toHaveBeenCalled()
+    const wrapper = mount(<EnhancedComponent component={Button} />)
     expect(wrapper.find('button').length).toBe(1)
   })
 
   test('should listen for changes on collections when the component mounts', () => {
-    const component = <Button label="Click Me" />
-    const data = {
-      collection: new Backbone.Collection([]),
-    }
-    data.collection.on = jest.fn()
-    mount(<EnhancedComponent component={component} data={data} />)
-    expect(data.collection.on).toHaveBeenCalled()
+    const collection = new Backbone.Collection([])
+    const component = <Button label="Click Me" collection={collection} />
+    collection.on = jest.fn()
+    mount(<EnhancedComponent component={component} />)
+    expect(collection.on).toHaveBeenCalled()
   })
 
   test('should listen for changes on models when the component mounts', () => {
-    const component = <Button label="Click Me" />
-    const data = {
-      model: new Backbone.Model(),
-    }
-    data.model.on = jest.fn()
-    mount(<EnhancedComponent component={component} data={data} />)
-    expect(data.model.on).toHaveBeenCalled()
+    const model = new Backbone.Model()
+    const component = <Button label="Click Me" model={model} />
+    model.on = jest.fn()
+    mount(<EnhancedComponent component={component} />)
+    expect(model.on).toHaveBeenCalled()
   })
 
   test('should stop listening for changes on collections when the component unmounts', () => {
-    const component = <Button label="Click Me" />
-    const data = {
-      collection: new Backbone.Collection([]),
-    }
-    data.collection.off = jest.fn()
-    const c = mount(<EnhancedComponent component={component} data={data} />)
+    const collection = new Backbone.Collection([])
+    const component = <Button label="Click Me" collection={collection} />
+    collection.off = jest.fn()
+    const c = mount(<EnhancedComponent component={component} />)
     c.unmount()
-    expect(data.collection.off).toHaveBeenCalled()
+    expect(collection.off).toHaveBeenCalled()
   })
 
   test('should stop listening for changes on models when the component unmounts', () => {
-    const component = <Button label="Click Me" />
-    const data = {
-      model: new Backbone.Model(),
-    }
-    data.model.off = jest.fn()
-    const c = mount(<EnhancedComponent component={component} data={data} />)
+    const model = new Backbone.Model()
+    const component = <Button label="Click Me" model={model} />
+    model.off = jest.fn()
+    const c = mount(<EnhancedComponent component={component} />)
     c.unmount()
-    expect(data.model.off).toHaveBeenCalled()
+    expect(model.off).toHaveBeenCalled()
   })
 
   test('should update the state when the collection is added to', () => {
-    const component = <Button />
-    const data = {
-      collection: new Backbone.Collection([]),
-    }
-    const selector = ({collection}) => {
-      return {
-        label: collection.map(m => m.name).join(' '),
-      }
-    }
-    const c = mount(
-      <EnhancedComponent
-        component={component}
-        data={data}
-        selector={selector}
-      />,
-    )
-    expect(c.state('label')).toEqual('')
-    data.collection.add(new Backbone.Model({name: 'hello'}))
-    expect(c.state('label')).toEqual('hello')
-    data.collection.add(new Backbone.Model({name: 'world'}))
-    expect(c.state('label')).toEqual('hello world')
+    const collection = new Backbone.Collection([])
+    const component = <Button collection={collection} />
+
+    const c = mount(<EnhancedComponent component={component} />)
+
+    expect(c.state('collection')).toHaveLength(0)
+    collection.add(new Backbone.Model({name: 'hello'}))
+    expect(c.state('collection')).toHaveLength(1)
+    collection.add(new Backbone.Model({name: 'world'}))
+    expect(c.state('collection')).toHaveLength(2)
   })
 
   test('should update the state when models are changed in the collection', () => {
-    const component = <Button />
     const model1 = new Backbone.Model({id: 1, name: 'hello'})
     const model2 = new Backbone.Model({id: 2, name: 'world'})
-    const data = {
-      collection: new Backbone.Collection([model1, model2]),
-    }
-    const selector = ({collection}) => {
-      return {
-        label: collection.map(m => m.name).join(' '),
-      }
-    }
-    const c = mount(
-      <EnhancedComponent
-        component={component}
-        data={data}
-        selector={selector}
-      />,
-    )
-    expect(c.state('label')).toEqual('hello world')
+    const collection = new Backbone.Collection([model1, model2])
+    const component = <Button collection={collection} />
+
+    const c = mount(<EnhancedComponent component={component} />)
+
+    expect(c.state('collection')[0].name).toEqual('hello')
+    expect(c.state('collection')[1].name).toEqual('world')
+
     model1.set('name', 'hey')
-    expect(c.state('label')).toEqual('hey world')
+    expect(c.state('collection')[0].name).toEqual('hey')
+
     model2.set('name', 'you')
-    expect(c.state('label')).toEqual('hey you')
+    expect(c.state('collection')[1].name).toEqual('you')
   })
 
   test('should update the state when models are removed from the collection', () => {
-    const component = <Button />
     const model1 = new Backbone.Model({id: 1, name: 'hello'})
     const model2 = new Backbone.Model({id: 2, name: 'world'})
-    const data = {
-      collection: new Backbone.Collection([model1, model2]),
-    }
-    const selector = ({collection}) => {
-      return {
-        label: collection.map(m => m.name).join(' '),
-      }
-    }
-    const c = mount(
-      <EnhancedComponent
-        component={component}
-        data={data}
-        selector={selector}
-      />,
-    )
-    expect(c.state('label')).toEqual('hello world')
-    data.collection.remove(model2)
-    expect(c.state('label')).toEqual('hello')
-    data.collection.remove(model1)
-    expect(c.state('label')).toEqual('')
+    const collection = new Backbone.Collection([model1, model2])
+    const component = <Button collection={collection} />
+
+    const c = mount(<EnhancedComponent component={component} />)
+
+    expect(c.state('collection')).toHaveLength(2)
+    collection.remove(model2)
+    expect(c.state('collection')).toHaveLength(1)
+    collection.remove(model1)
+    expect(c.state('collection')).toHaveLength(0)
   })
 
   test('should update the state when the collection is reset', () => {
-    const component = <Button />
-    const data = {
-      collection: new Backbone.Collection([
-        new Backbone.Model({name: 'Click Me'}),
-      ]),
-    }
-    const selector = ({collection}) => {
-      return {
-        label: collection.map(m => m.name).join(' '),
-      }
-    }
-    const c = mount(
-      <EnhancedComponent
-        component={component}
-        data={data}
-        selector={selector}
-      />,
-    )
-    expect(c.state('label')).toEqual('Click Me')
-    data.collection.reset([])
-    expect(c.state('label')).toEqual('')
+    const collection = new Backbone.Collection([
+      new Backbone.Model({name: 'Click Me'}),
+    ])
+    const component = <Button collection={collection} />
+
+    const c = mount(<EnhancedComponent component={component}/>)
+
+    expect(c.state('collection')).toHaveLength(1)
+    collection.reset([])
+    expect(c.state('collection')).toHaveLength(0)
   })
 
   test('should update the state when the model changes', () => {
-    const component = <Button />
-    const data = {
-      model: new Backbone.Model({label: 'Click Me'}),
-    }
-    const selector = ({model}) => ({label: model.label})
-    const c = mount(
-      <EnhancedComponent
-        component={component}
-        data={data}
-        selector={selector}
-      />,
-    )
-    expect(c.state('label')).toEqual('Click Me')
-    data.model.set({label: "Don't Click Me"})
-    expect(c.state('label')).toEqual("Don't Click Me")
-  })
+    const model = new Backbone.Model({ label: 'Click Me' })
+    const component = <Button model={model} />
 
-  test('should pass data along as props to child', () => {
-    const component = <Button />
-    const data = {
-      label: 'Click Me',
-    }
-    const c = mount(<EnhancedComponent component={component} data={data} />)
-    const child = c.find(Button)
-    expect(child.props().label).toEqual('Click Me')
+    const c = mount(<EnhancedComponent component={component} />)
+
+    expect(c.state('model').label).toEqual('Click Me')
+    model.set({ label: "Don't Click Me"})
+    expect(c.state('model').label).toEqual("Don't Click Me")
   })
 
   test('should create a store on init', () => {
@@ -211,15 +139,17 @@ describe('EnhancedComponent', () => {
 
   test('should not pass props Brigade connected component', () => {
     const ConnectedComponent = connect(null)(Button)
-    const data = {
+    const initialState = {
       model: new Backbone.Model({label: 'Click Me'}),
     }
     const wrapper = mount(
-      <EnhancedComponent component={ConnectedComponent} data={data} />,
+      <EnhancedComponent
+        component={ConnectedComponent}
+        initialState={initialState}
+      />,
     )
 
     const c = wrapper.find('button')
-
     expect(c.text()).not.toContain('Click Me')
   })
 
@@ -231,16 +161,18 @@ describe('EnhancedComponent', () => {
     }
     const ConnectedComponent = connect(mapStateToProps)(Button)
 
-    const data = {
+    const initialState = {
       model: new Backbone.Model({label: 'Click Me'}),
     }
 
     const wrapper = mount(
-      <EnhancedComponent component={ConnectedComponent} data={data} />,
+      <EnhancedComponent
+        component={ConnectedComponent}
+        initialState={initialState}
+      />,
     )
 
     const c = wrapper.find('button')
-
     expect(c.text()).toContain('Click Me')
   })
 
@@ -252,12 +184,15 @@ describe('EnhancedComponent', () => {
     }
     const ConnectedComponent = connect(mapStateToProps)(Button)
 
-    const data = {
+    const initialState = {
       model: new Backbone.Model({label: 'Click Me'}),
     }
 
     const wrapper = mount(
-      <EnhancedComponent component={<ConnectedComponent />} data={data} />,
+      <EnhancedComponent
+        component={<ConnectedComponent />}
+        initialState={initialState}
+      />,
     )
 
     const c = wrapper.find('button')
@@ -282,11 +217,16 @@ describe('EnhancedComponent', () => {
       )
     }
 
-    const data = {
+    const initialState = {
       model: new Backbone.Model({label: 'Click Me'}),
     }
 
-    const wrapper = mount(<EnhancedComponent component={App} data={data} />)
+    const wrapper = mount(
+      <EnhancedComponent
+        component={App}
+        initialState={initialState}
+      />
+    )
     const c = wrapper.find('button')
 
     expect(c.text()).toContain('Click Me')
@@ -311,13 +251,16 @@ describe('EnhancedComponent', () => {
 
     const model = new Backbone.Model({label: 'Click Me'})
 
-    const data = {
+    const initialState = {
       model,
     }
 
     const spy = jest.fn()
     const wrapper = mount(
-      <EnhancedComponent component={App} data={data} useStore />,
+      <EnhancedComponent
+        component={App}
+        initialState={initialState}
+      />
     )
     wrapper.instance().render = spy
 
@@ -356,13 +299,16 @@ describe('EnhancedComponent', () => {
 
     const model = new Backbone.Model({label: 'Click Me'})
 
-    const data = {
+    const initialState = {
       model,
     }
 
     const spy = jest.fn()
     const wrapper = mount(
-      <EnhancedComponent component={ConnectedApp} data={data} />,
+      <EnhancedComponent
+        component={ConnectedApp}
+        initialState={initialState}
+      />,
     )
     wrapper.instance().render = spy
 
@@ -418,13 +364,16 @@ describe('EnhancedComponent', () => {
       },
     ])
 
-    const data = {
+    const initialState = {
       members,
     }
 
     const spy = jest.fn()
     const wrapper = mount(
-      <EnhancedComponent component={ConnectedApp} data={data} />,
+      <EnhancedComponent
+        component={ConnectedApp}
+        initialState={initialState}
+      />,
     )
     wrapper.instance().render = spy
 
@@ -435,6 +384,7 @@ describe('EnhancedComponent', () => {
       lastName: 'Wartooth',
       id: 'toki',
     })
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(2)
@@ -445,6 +395,7 @@ describe('EnhancedComponent', () => {
       lastName: 'Murderface',
       id: 'murderface',
     })
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(3)
@@ -459,6 +410,7 @@ describe('EnhancedComponent', () => {
     expect(wrapper.find('div.members').text()).toContain('Murderface')
 
     members.remove({id: 'murderface'})
+    wrapper.update()
 
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(2)

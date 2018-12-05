@@ -1,1 +1,1 @@
-export { ReactMixin } from "./ReactMixin";
+export {ReactMixin} from './ReactMixin'

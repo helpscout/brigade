@@ -1,0 +1,75 @@
+---
+name: Getting Started
+route: /getting-started
+---
+
+import { Playground } from 'docz'
+
+# Getting Started
+
+## Installation
+
+Install Brigade in your project using a package manager. Here we are assuming
+that you are using [npm](https://www.npmjs.com/package/npm).
+
+```
+npm i -S @helpscout/brigade
+```
+
+## Using
+
+Under the hood, Brigade uses [Cocktail](https://github.com/onsi/cocktail) to
+mixin functionality into your Backbone or Marionette views.
+
+### Basic Usage
+
+1. Import the `brigade` function into your view file.
+2. Include a `components` property or method in your view.
+3. Invoke the `brigade` function with your view as the argument before exporting.
+
+```javascript
+import brigade from '@helpscout/brigade'
+import Marionette from 'backbone.marionette'
+import React from 'react'
+import _ from 'underscore'
+
+import Button from '@helpscout/hsds-react/components/Button'
+
+const FormView = Marionette.View.extend({
+  components: {
+    '.js-button': <Button primary submit>Save</Button>
+  },
+
+  // This can also be written as:
+  // components() {
+  //   return {
+  //     'js-button': <Button primary submit>Save</Button>
+  //   }
+  // }
+
+  template: _.template(`
+    <form>
+      <fieldset>
+        <label>Email address</label>
+        <input type="email" placeholder="Enter your email" />
+      </fieldset>
+      <div class="js-button"></div>
+    </form>
+  `),
+})
+
+export default brigade(FormView)
+```
+
+Use the view in your application as you normally would. When the view is
+rendered, Brigade will handle iterating over the key-value pairs in the
+`components` property (or returned from the `components` method) and mount
+the `component` defined in the `value` into the element in the view that matches
+the `selector` defined in the `key`.
+
+In the example above, when the view is rendered, the `Button` component will be
+mounted into the `div` with the classname of `js-button` inside the `FormView`
+instance.
+
+The `components` property or method is a powerful construct. See the next
+section on [Components](/components) for more advanced usage.

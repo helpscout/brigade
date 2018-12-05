@@ -1,46 +1,63 @@
+import PropTypes from 'prop-types'
 import React, {Component} from 'react'
-import {getCollections, getModels, transformDataToProps} from './util'
+import {
+  getCollections,
+  getModels,
+  transformDataToProps,
+  makeWatchAll,
+} from './util'
 import createStore from '../createStore'
 import Provider from '../Provider'
-import {isConnectedComponent} from '../connect/utils'
 
 const COLLECTION_EVENTS = 'add change remove reset'
 const MODEL_EVENTS = 'change'
 
 class EnhancedComponent extends Component {
+  static propTypes = {
+    component: PropTypes.oneOfType([
+      PropTypes.element.isRequired,
+      PropTypes.func,
+    ]),
+    initialState: PropTypes.object,
+    externalActions: PropTypes.object,
+  }
+
+  static defaultProps = {
+    initialState: {},
+    externalActions: {},
+  }
+
+  static displayName = 'BrigadeEnhancedComponent'
+
   constructor(props) {
     super(props)
-    this.state = this.getPropsForState()
-    this.collections = getCollections(props.data)
-    this.models = getModels(props.data)
-    this.store = createStore(props.data)
+
+    const {
+      component: {props: componentProps},
+      initialState,
+      externalActions,
+    } = props
+
+    this.state = transformDataToProps(componentProps)
+    this.stateCollections = getCollections(componentProps)
+    this.stateModels = getModels(componentProps)
+
+    this.store = createStore(initialState, externalActions)
+
+    this.watchAll = makeWatchAll(this.updateState, this)
   }
 
   componentDidMount() {
-    this.watch()
+    this.watchState()
   }
 
   componentWillUnmount() {
-    this.unwatch()
+    this.unwatchState()
   }
 
-  shouldUpdateState = () => {
-    const {component, useStore} = this.props
-
-    return !useStore && !isConnectedComponent(component)
-  }
-
-  renderComponent = () => {
+  renderStateComponent = () => {
     const {component} = this.props
     const {...props} = this.state
-
-    if (isConnectedComponent(component)) {
-      if (React.isValidElement(component)) {
-        return component
-      } else {
-        return React.createElement(component)
-      }
-    }
 
     if (React.isValidElement(component)) {
       return React.cloneElement(component, props)
@@ -50,39 +67,24 @@ class EnhancedComponent extends Component {
   }
 
   render() {
-    return <Provider store={this.store}>{this.renderComponent()}</Provider>
+    return <Provider store={this.store}>{this.renderStateComponent()}</Provider>
   }
 
-  getPropsForState() {
-    const {data, selector} = this.props
-    return transformDataToProps(data, selector)
-  }
-
-  updatePropsInState() {
-    if (this.shouldUpdateState()) {
-      const props = this.getPropsForState()
-      this.setState({
-        ...props,
-      })
-    }
-  }
-
-  unwatch() {
-    this.collections.forEach(collection => {
-      collection.off(COLLECTION_EVENTS, this.updatePropsInState, this)
-    })
-    this.models.forEach(model => {
-      model.off(MODEL_EVENTS, this.updatePropsInState, this)
+  updateState() {
+    const props = transformDataToProps(this.props.component.props)
+    this.setState({
+      ...props,
     })
   }
 
-  watch() {
-    this.collections.forEach(collection => {
-      collection.on(COLLECTION_EVENTS, this.updatePropsInState, this)
-    })
-    this.models.forEach(model => {
-      model.on(MODEL_EVENTS, this.updatePropsInState, this)
-    })
+  unwatchState() {
+    this.watchAll.off(this.stateCollections, COLLECTION_EVENTS)
+    this.watchAll.off(this.stateModels, MODEL_EVENTS)
+  }
+
+  watchState() {
+    this.watchAll.on(this.stateCollections, COLLECTION_EVENTS)
+    this.watchAll.on(this.stateModels, MODEL_EVENTS)
   }
 }
 

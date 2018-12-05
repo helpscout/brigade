@@ -1,9 +1,9 @@
-const result = (obj = {}, propName = "") => {
-  const prop = obj[propName];
-  if (typeof prop === "function") {
-    return prop.call(obj);
+const result = (obj = {}, propName = '') => {
+  const prop = obj[propName]
+  if (typeof prop === 'function') {
+    return prop.call(obj)
   }
-  return prop;
-};
+  return prop
+}
 
-export default result;
+export default result

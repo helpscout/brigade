@@ -2,10 +2,20 @@ import React from 'react'
 import {render as defaultRender} from 'react-dom'
 import {
   buildEnhancedComponent as defaultBuildEnhancedComponent,
+  evaluateBuilder,
   getBuilder,
   getEl,
 } from '.'
 
+/**
+ * Build the React components and mount them in the view at selectors.
+ *
+ * @param {Object} view
+ * @param {Object} components
+ * @param {function} buildEnhancedComponent
+ * @param {function} render
+ * @returns {array}
+ */
 const buildComponents = (
   view,
   components,
@@ -21,14 +31,13 @@ const buildComponents = (
         return undefined
       }
 
-      const result = builder.apply(view)
+      const result = evaluateBuilder(builder, view)
+
       if (!result) {
         return undefined
       }
 
-      if (React.isValidElement(result)) {
-        render(result, el)
-      } else if (result && result.component) {
+      if (result && (React.isValidElement(result) || result.component)) {
         render(buildEnhancedComponent(result), el)
       } else {
         return undefined
