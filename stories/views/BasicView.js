@@ -5,7 +5,7 @@ import brigade from '../../src'
 import Basic from '../components/Basic'
 import template from '../templates/template'
 
-const BasicView = Marionette.View.extend({
+const BasicView = Marionette.ItemView.extend({
   components: {
     '#page': <Basic />,
   },

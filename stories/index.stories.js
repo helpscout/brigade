@@ -1,14 +1,13 @@
 import React from 'react'
 import { storiesOf } from '@storybook/react'
-
-import AppWrapper from './components/AppWrapper'
 import BasicView from './views/BasicView'
 import ListView from './views/ListView'
 import ConnectedListView from './views/ConnectedListView'
 import TodoAppView from './views/TodoAppView'
+import ViewWrapper from './components/ViewWrapper'
 
 storiesOf('Examples', module)
-  .add('Basic', () => <AppWrapper View={BasicView} />)
-  .add('Simple List', () => <AppWrapper View={ListView} />)
-  .add('Connected Simple List', () => <AppWrapper View={ConnectedListView} />)
-  .add('Connected Todo App', () => <AppWrapper View={TodoAppView} />)
+  .add('Basic', () => <ViewWrapper renderView={() => new BasicView()} />)
+  .add('Simple List', () => <ViewWrapper renderView={() => new ListView()} />)
+  .add('Connected Simple List', () => <ViewWrapper renderView={() => new ConnectedListView()} />)
+  .add('Connected Todo App', () => <ViewWrapper renderView={() => new TodoAppView()} />)

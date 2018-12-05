@@ -7,7 +7,7 @@ import TodoApp from '../components/Todo/App'
 import template from '../templates/template'
 
 export const TodoAppView = brigade(
-  Marionette.View.extend({
+  Marionette.ItemView.extend({
     components() {
       return {
         '#page': {

@@ -46,8 +46,10 @@
     "@storybook/addons": "^4.0.9",
     "@storybook/react": "^4.0.9",
     "babel-loader": "^8.0.4",
-    "backbone": "1.1.2",
     "backbone.marionette": "1.8.8",
+    "backbone.babysitter": "^0.1.0",
+    "backbone.wreqr": "^1.0.0",
+    "underscore": "1.6.0",
     "coveralls": "^3.0.2",
     "docz": "^0.12.13",
     "enzyme": "3.7.0",
@@ -63,7 +65,6 @@
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "react-test-renderer": "^16.6.3",
-    "underscore": "^1.9.1",
     "webpack": "^4.26.1"
   },
   "peerDependencies": {

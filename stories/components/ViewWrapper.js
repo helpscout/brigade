@@ -1,4 +1,5 @@
 import React, { PureComponent } from 'react'
+import $ from 'jquery'
 import Marionette from 'backbone.marionette'
 import PropTypes from 'prop-types'
 
@@ -8,12 +9,13 @@ class ViewWrapper extends PureComponent {
   }
 
   render() {
-    return <div id="region" />
+    return <div id="region"/>
   }
 
   showView() {
-    const region = new Marionette.Region({ el: '#region' })
-    region.show(this.props.renderView())
+    const region = new Marionette.Region({ el: $('#region') })
+    const view = this.props.renderView()
+    region.show(view)
   }
 }
 

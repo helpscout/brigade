@@ -7,7 +7,7 @@ import { ConnectedList } from '../components/List'
 import template from '../templates/template'
 
 const ConnectedListView = brigade(
-  Marionette.View.extend({
+  Marionette.ItemView.extend({
     components() {
       return {
         '#page': {

@@ -1,13 +1,13 @@
 import React from 'react'
 import Backbone from 'backbone'
 import { storiesOf } from '@storybook/react'
-import ViewWrapper from './ViewWrapper'
+import ViewWrapper from '../../components/ViewWrapper'
 import ComponentView from './ComponentView'
 import Layout from './Layout'
 import Marionette from 'backbone.marionette'
 import CompositeView from './CompositeView'
 
-const stories = storiesOf('Common/ReactView', module)
+const stories = storiesOf('ReactView', module)
 
 stories.add('Simple', () => {
   const model = new Backbone.Model({ name: 'Jeff' })
