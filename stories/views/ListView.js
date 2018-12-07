@@ -7,7 +7,7 @@ import List from '../components/List'
 import template from '../templates/template'
 
 const ListView = brigade(
-  Marionette.View.extend({
+  Marionette.ItemView.extend({
     components() {
       return {
         '#page': (
