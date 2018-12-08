@@ -1,0 +1,48 @@
+---
+name: ReactView
+route: /react-view
+---
+
+# ReactView
+
+ReactView is a higher order function (HOF) that ships with Brigade since 1.0.0.
+
+## Overview
+
+ReactView enhances a Marionette ItemView such that it can use React components
+as templates.
+
+Views can implement a `template` method that accepts `props` as the argument.
+The props are the options passed to the view when it was instantiated. The
+method should return a component with those props.
+
+## Basic Usage
+
+```
+import {ReactView} from '@helpscout/brigade'
+import Marionette from 'backbone.marionette'
+import React from 'react'
+
+const ComponentView = ReactView(Marionette.ItemView.extend({
+  template(props) {
+    return <HeaderComponent {...props} />
+  }
+}))
+
+const view = new ComponentView({
+  title: 'My Header'
+})
+
+```
+
+In the above example, the view is rendered with the title prop, 'My Header'.
+
+ReactView is ideal to use for 1:1 replacements of Marionette ItemViews with
+React components.
+
+## Ideal Use Case
+
+The ideal use case for ReactView is 1:1 replacement of Marionette ItemViews
+with React components. For example, ReactView could be used to replace the
+ItemViews in a CompositeView with ReactComponents but the business logic and
+the rest of the user interface is still implemented in Marionette.

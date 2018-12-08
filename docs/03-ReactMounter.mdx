@@ -1,0 +1,240 @@
+---
+name: ReactMounter
+route: /react-mounter
+---
+
+# ReactMounter
+
+ReactMounter is a higher order function (HOF) that ships with Brigade since
+1.0.0. It replaces the default export from Brigade 0.x.
+
+## Overview
+
+In a nutshell, ReactMounter enhances a Backbone or Marionette View. You may
+add a property or method to your View called `components`. This property or
+method should evaluate to a map of key-value pairs, where the keys are
+`selectors` and the values are any of the following:
+
+1. A React component class or function
+2. A React component instance
+3. A builder object
+
+We generically refer to the values in those key-value pairs as the `builder`.
+
+ReactMounter is declarative in that the `components` property will be evaluated
+and for each selector in the `components`, the corresponding React component
+is built and mounted into the first node in the template that matches the
+selector. This happens on render in the view life cycle.
+
+Simply declare the React components you want to mount and where you want to
+mount them. ReactMounter will do the heavy lifting.
+
+Not only will ReactMounter mount components into the DOM. It will also give you
+the following for free:
+
+- Enhance each component with a state
+- Watch collections and models passed as props for changes and sychronize them with the state
+- Enhance each component with a store if given an initial state
+- Watch collections and models passed as initial state for changes and sychronize them with the store
+- Cast collections and models passed as props to plain JavaScript objects
+- Inject external methods into the store
+
+...and that's not all!
+
+Brigade exports a `connect` HOF that can be used to map the state of the store
+to props on a component. It can also be used to map external methods in the
+store to props on a component.
+
+### Basic Usage
+
+1. Import the `ReactMounter` HOF into your view file.
+2. Include a `components` property or method in your view.
+3. Invoke the `ReactMounter` HOF with your view as the argument.
+
+```javascript
+import {ReactMounter} from '@helpscout/brigade'
+import Marionette from 'backbone.marionette'
+import React from 'react'
+import _ from 'underscore'
+
+import Button from '@helpscout/hsds-react/components/Button'
+
+const FormView = ReactMounter(Marionette.View.extend({
+  components: {
+    '.js-button': <Button primary submit>Save</Button>
+  },
+
+  // This can also be written as:
+  // components() {
+  //   return {
+  //     'js-button': <Button primary submit>Save</Button>
+  //   }
+  // },
+
+  template: _.template(`
+    <form>
+      <fieldset>
+        <label>Email address</label>
+        <input type="email" placeholder="Enter your email" />
+      </fieldset>
+      <div class="js-button"></div>
+    </form>
+  `),
+}))
+
+```
+
+In the example above, when the view is rendered, the `Button` component will
+be mounted into the `div` with the className of `js-button`.
+
+The `components` property or method is a powerful construct. Read on for more
+advanced usage.
+
+## The Components Property or Method
+
+The `components` property or method on ReactMounter-enhanced views can take
+few different shapes. In its simplest form, we can define a property assigned
+an object literal.
+
+```javascript
+components: {
+  '#app': App,
+}
+```
+
+In the above example, the `App` component will be mounted in the first node
+in the DOM that matches the `#app` selector.
+
+Since we can use instances of a React component, it's possible to set props
+on the component too.
+
+```
+components: {
+  '#app': <App title="My App" />
+}
+```
+
+The problem with using an object literal like we did in the above examples is
+that the builder will NOT be executed in the context of the View.
+
+We can alleviate this issue by returning the builder from an anonymous function:
+
+```
+components: {
+  '#app': () => <App title={this.title} />
+}
+```
+
+Even better, we define a `components` method instead:
+
+```
+components() {
+  return {
+    '#app': <App title={this.title} />
+  }
+}
+```
+
+The above example is the recommended technique and the one that will be used
+in the remainder of the examples.
+
+## Syncing Models & Collections in State
+
+We can pass models and collections from the View into the React component as
+props.
+
+```
+components() {
+  '#app': <App person={this.person}
+               people={this.people}
+               addPerson={this.addPerson}
+          />
+}
+```
+
+In the example above, `this.person` is a Backbone.Model and `this.people` is a
+Backbone.Collection.
+
+It's important to note that when we do this, we actually cast the models and
+collections to JSON, thereby creating plain JavaScript object representations
+of them. We wrap the component in a stateful component which stores the
+JavaScript object representation of the models and collections in its state.
+When the original models or collections change, they are once again cast to
+JSON and upated in the state. This causes the props to our mounted component to
+change, triggering a re-render if warranted.
+
+You should only use models and collections this way when working with simple
+components. If you have a deep component tree, you will need to pass props
+through the tree and any changes will result in render checks throughout the
+component tree and possible re-renders throughout the component tree. In such
+cases, use the store instead.
+
+## Syncing Models & Collections in Store
+
+We learned before that by setting an initial state, we can create a store for
+those values instead of storing them in the state of the wrapping component.
+
+When we add models and collections to the initial state, they are cast to JSON
+before being stored in the store. When the models or collections change, they
+are once again cast to JSON and updated in the store. With this approach, the
+component will NOT receive new props and there be no render checks. This is a
+more performant solution. Furthermore, we can avoid passing props through the
+component tree. We can use the `connect` HOF to grab what we need from the state.
+This means that only the connected component will receive new props on state
+changes.
+
+```
+components() {
+  '#app': App,
+  initialState: {
+    person: this.person,
+    people: this.people,
+  },
+  externalActions: {
+    addPerson: this.addPerson,
+  }
+}
+```
+
+In the above example, we also put some instance methods from the view into the
+`externalActions`. These external actions can be retrieved from the store and
+passed as props to a component via the `connect` HOF.
+
+```
+import { connect } from '@helpscout/brigade'
+import Form from '../Form'
+
+const mapStateToProps = ({ person, people }) => ({ person, people })
+const actions = store => {
+  const { addPerson } = store.getExternalActions()
+  return {
+    addPerson: (state, person) => addPerson(person)
+  }
+}
+connect(mapStateToProps, addPerson)(Form)
+```
+
+The above example illustrates how we can grab state and actions out of the store
+from any component in our mounted React app using the `connect` HOC that ships
+with Brigade.
+
+You will note that actions are rebound to receive the current `state` as the
+first argument so if your external action does not accept that argument you
+will need to remap the action as shown in the example above.
+
+This technique, of syncing models and collections in the store, is the
+recommended way for mounting entire React apps in a Backbone or Marionette
+view where you want to use existing models, collections and instance methods
+that operate on those models and collections. Essentially, it allows us to
+architect the app using patterns popularized by Redux, creating a path forward
+to eventually repace the Backbone or Marionette piece with Redux or a similar
+solution. Doing so should not involve much if any changes to the React
+app.
+
+## Ideal Use Case
+
+ReactMounter is ideally suited for mounting complex React components or entire
+React applications inside of a Backbone or Marionette view. In such cases,
+all or some of the business logic and state is managed in Backbone or Marionette
+and synced with the React app via ReactMounter. The entire user interface of
+the feature would be built with React.
