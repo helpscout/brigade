@@ -3,11 +3,31 @@ name: Getting Started
 route: /getting-started
 ---
 
-import { Playground } from 'docz'
-
 # Getting Started
 
-## Installation
+## Dependencies
+
+Before getting started, make sure you have the required dependencies to use
+Brigade.
+
+### Peer Dependencies:
+
+- [Backbone](https://www.npmjs.com/package/backbone)
+- [React](https://www.npmjs.com/package/react)
+- [React DOM](https://www.npmjs.com/package/react-dom)
+
+### Optional Peer Dependencies
+
+- [Marionette](https://www.npmjs.com/package/backbone.marionette)
+
+### Notes
+
+- Backbone requires jQuery and underscore.
+- brigade.ReactMounter should work with any version of Backbone or Marionette
+- brigade.ReactView only supports Marionette 1.8.*
+- React 15 and 16 are supported
+
+## Insallation
 
 Install Brigade in your project using a package manager. Here we are assuming
 that you are using [npm](https://www.npmjs.com/package/npm).
@@ -16,60 +36,59 @@ that you are using [npm](https://www.npmjs.com/package/npm).
 npm i -S @helpscout/brigade
 ```
 
-## Using
+## Choose Your Flavor
 
-Under the hood, Brigade uses [Cocktail](https://github.com/onsi/cocktail) to
-mixin functionality into your Backbone or Marionette views.
+Brigade includes two higher-order functions (HOF) to help you integrate React
+into your Backbone or Marionette apps.
 
-### Basic Usage
+Both HOFS have the same API. Invoke the HOF with a View to create a new View
+that is enhanced with React capabilities.
 
-1. Import the `brigade` function into your view file.
-2. Include a `components` property or method in your view.
-3. Invoke the `brigade` function with your view as the argument before exporting.
-
-```javascript
-import brigade from '@helpscout/brigade'
+```
 import Marionette from 'backbone.marionette'
-import React from 'react'
-import _ from 'underscore'
+import {ReactMounter, ReactView} from '@helpscout/brigade'
 
-import Button from '@helpscout/hsds-react/components/Button'
-
-const FormView = Marionette.View.extend({
-  components: {
-    '.js-button': <Button primary submit>Save</Button>
-  },
-
-  // This can also be written as:
-  // components() {
-  //   return {
-  //     'js-button': <Button primary submit>Save</Button>
-  //   }
-  // }
-
-  template: _.template(`
-    <form>
-      <fieldset>
-        <label>Email address</label>
-        <input type="email" placeholder="Enter your email" />
-      </fieldset>
-      <div class="js-button"></div>
-    </form>
-  `),
-})
-
-export default brigade(FormView)
+const ViewA = ReactMounter(Marionette.ItemView)
+const ViewB = ReactView(Marionette.ItemView)
 ```
 
-Use the view in your application as you normally would. When the view is
-rendered, Brigade will handle iterating over the key-value pairs in the
-`components` property (or returned from the `components` method) and mount
-the `component` defined in the `value` into the element in the view that matches
-the `selector` defined in the `key`.
+The signature of each HOF is the same, but the differences end there. They
+accomodate two distinct means of integrating React into a Backbone or
+Marionette application.
 
-In the example above, when the view is rendered, the `Button` component will be
-mounted into the `div` with the classname of `js-button` inside the `FormView`
-instance.
+1. ReactMounter mounts React components inside a Backbone or Marionette View.
+2. ReactView uses React as the template layer in a Marionette ItemView.
 
-The `components` property or method is a powerful construct. See the next
-section on [Components](/components) for more advanced usage.
+It is recommended that you learn about both of these HOFs and then choose the
+one that best suits the task at hand.
+
+## Migrating from 0.x to 1.x
+
+Brigade 1.0.0 drops the default export. Users need to pick a flavour, importing
+ReactMounter or ReactView, depending on their use case.
+
+If you are moving from 0.x to 1.x you should replace:
+
+```
+import brigade from '@helpscout/brigade'
+...
+const View = brigade(Marionette.ItemView)
+```
+
+with:
+
+```
+import {ReactMounter} from '@helpscout/brigade'
+...
+const View = ReactMounter(Marionette.ItemView)
+```
+
+ReactMounter builds on the default export from Brigade 0.3. The API for the
+`components` property added to the View has changed so you will need to learn
+about the differences and update your Views accordingingly. The new API is
+simpler, more flexible, and more powerful.
+
+## Learn More
+
+- [ReactMounter](/react-mounter)
+- [ReactView](/react-view)

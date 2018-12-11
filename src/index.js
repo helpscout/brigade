@@ -1,4 +1,2 @@
-import {ReactMixin} from './mixins'
-
 export {connect} from './components'
-export default ReactMixin
+export {ReactMounter, ReactView} from './hoc'

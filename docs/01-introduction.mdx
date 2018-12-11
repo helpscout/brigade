@@ -7,34 +7,32 @@ route: /
 
 ## What is Brigade?
 
-Brigade is a library that enhances Backbone/Marionette views providing
-a declarative interface to:
+Brigade is a library that enhances Backbone or Marionette views. It provides a
+couple of abstractions for:
 
-- Mount one or more React components into a Backbone/Marionette view
-- Syncronize React components with the state of Backbone collections and models
-- Use actions defined in a Backbone/Mariotte app inside a React component
+- Mounting one or more React components into a Backbone or Marionette view
+- Keeping React components in sync with Backbone collections and models
+- Using actions defined in a Backbone or Marionette view with a React component
 
 ## Is Brigade for me?
 
-If you are integrating React components into a legacy Backbone/Marionette
+If you are integrating React components into a legacy Backbone or Marionette
 application than Brigade may be a good fit for your project.
 
-If you are simply looking for a state management solution for your React
-project, then Brigade is not for you. In this case, try
+Brigade will allow you to mix and match your
+Backbone/Marionette code and React code allowing for seamless use of React
+in Backbone/Marionette applications as well as providing a migration path to
+a React-only application.
+
+Use brigade.ReactView to replace ItemViews in a Marionette application with
+a React component.
+
+Use brigade.ReactMounter to mount React components or entire React apps
+in a Backbone or Marionette view.
+
+If any of this sounds useful, carry on. If you are just looking for a state
+management solution for your project, then Brigade is not for you. In this case,
+try
 [MobX](https://www.npmjs.com/package/mobx),
 [Redux](https://www.npmjs.com/package/redux),
-[Unistore](https://github.com/developit/unistore) or one of many more solutions.
-
-## Dependencies
-
-Brigade has the following peer dependencies:
-
-- [Backbone](https://www.npmjs.com/package/backbone)
-- [React](https://www.npmjs.com/package/react)
-- [React DOM](https://www.npmjs.com/package/react-dom)
-
-The following peer dependencies are optional:
-
-- [Marionette](https://www.npmjs.com/package/backbone.marionette)
-
-Note that Backbone requires jQuery and underscore.
+[Unistore](https://www.npmjs.com/package/unistore) or another solution.
