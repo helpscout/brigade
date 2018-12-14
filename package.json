@@ -43,12 +43,11 @@
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@helpscout/hsds-react": "^2.2.1",
-    "@helpscout/zero": "0.1.0-2",
+    "@helpscout/zero": "1.0.1",
     "@storybook/addon-actions": "^4.0.9",
     "@storybook/addon-links": "^4.0.9",
     "@storybook/addons": "^4.0.9",
     "@storybook/react": "^4.0.9",
-    "babel-core": "7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
     "backbone.babysitter": "^0.1.0",
     "backbone.marionette": "1.8.8",
