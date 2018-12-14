@@ -23,3 +23,6 @@ storybook-static
 
 # Docz
 docs
+
+# Other
+__tests__
