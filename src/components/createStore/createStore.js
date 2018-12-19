@@ -26,7 +26,8 @@ export class BrigadeStore {
   }
 
   updatePropsFromBackboneChange(nextInstance) {
-    // Collection vs. Model check
+    // Collection vs. Model check. If nextInstance is a model from a collection,
+    // we want a reference to the collection.
     const backboneInstance = nextInstance.collection
       ? nextInstance.collection
       : nextInstance
