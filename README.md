@@ -19,12 +19,12 @@
 
 ## What is Brigade?
 
-Brigade is a library that enhances Backbone/Marionette views providing
-consumers with a declarative interface to:
+Brigade is a library that enhances Backbone or Marionette views. It provides a
+couple of abstractions for:
 
-- Mount one or more React components into a Backbone/Marionette view
-- Syncronize the React components with the state of Backbone models
-- Reduce synchronized state to computed/derived props that your React components require
+- Mounting one or more React components into a Backbone or Marionette view
+- Keeping React components in sync with Backbone collections and models
+- Using actions defined in a Backbone or Marionette view with a React component
 
 ## Is Brigade for me?
 
@@ -33,8 +33,9 @@ application than Brigade may be a good fit for your project.
 
 If you are simply looking for a state management solution for your React
 project, then Brigade is not for you. In this case, try
+[MobX](https://www.npmjs.com/package/mobx),
 [Redux](https://www.npmjs.com/package/redux),
-[MobX](https://www.npmjs.com/package/mobx) or one of many more solutions.
+[Unistore](https://www.npmjs.com/package/unistore) or another solution.
 
 ## Dependencies
 
@@ -45,7 +46,7 @@ Brigade has the following peer dependencies:
 - [React](https://www.npmjs.com/package/react)
 - [React DOM](https://www.npmjs.com/package/react-dom)
 
-Backbone requires jQuery and Underscore.
+Marionette is optional. Backbone requires jQuery and Underscore.
 
 ## Installation
 
@@ -55,5 +56,5 @@ npm install @helpscout/brigade
 
 ## Documentation
 
-Docs: [https://brigade.netlify.com](https://brigade.netlify.com)
-Storybook: [https://brigade-storybook.netlify.com](https://brigade-storybook.netlify.com)
+- Docs: [https://brigade.netlify.com](https://brigade.netlify.com)
+- Storybook: [https://brigade-storybook.netlify.com](https://brigade-storybook.netlify.com)
