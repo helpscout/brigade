@@ -15,3 +15,14 @@ coverage
 
 # ESLint
 .eslintcache
+
+# Stories
+stories
+.storybook
+storybook-static
+
+# Docz
+docs
+
+# Other
+__tests__

@@ -23,7 +23,7 @@ describe('result', () => {
     })
   })
 
-  test('should evaluate result of funciton if prop is function', () => {
+  test('should evaluate result of function if prop is function', () => {
     const obj = {
       func: () => 3,
     }

@@ -1,0 +1,38 @@
+---
+name: Introduction
+route: /
+---
+
+# Introduction
+
+## What is Brigade?
+
+Brigade is a library that enhances Backbone or Marionette views. It provides a
+couple of abstractions for:
+
+- Mounting one or more React components into a Backbone or Marionette view
+- Keeping React components in sync with Backbone collections and models
+- Using actions defined in a Backbone or Marionette view with a React component
+
+## Is Brigade for me?
+
+If you are integrating React components into a legacy Backbone or Marionette
+application than Brigade may be a good fit for your project.
+
+Brigade will allow you to mix and match your
+Backbone/Marionette code and React code allowing for seamless use of React
+in Backbone/Marionette applications as well as providing a migration path to
+a React-only application.
+
+Use brigade.ReactView to replace ItemViews in a Marionette application with
+a React component.
+
+Use brigade.ReactMounter to mount React components or entire React apps
+in a Backbone or Marionette view.
+
+If any of this sounds useful, carry on. If you are just looking for a state
+management solution for your project, then Brigade is not for you. In this case,
+try
+[MobX](https://www.npmjs.com/package/mobx),
+[Redux](https://www.npmjs.com/package/redux),
+[Unistore](https://www.npmjs.com/package/unistore) or another solution.

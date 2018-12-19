@@ -15,3 +15,7 @@ coverage
 
 # ESLint
 .eslintcache
+
+# Docz
+.docz
+storybook-static
