@@ -6,7 +6,10 @@ import React from 'react'
 import {mount} from 'enzyme'
 
 describe('EnhancedComponent', () => {
-  const Button = ({label}) => <button>{label}</button>
+  const CLICKED = 'clicked'
+  const Button = ({label, onClick = () => {}}) => (
+    <button onClick={e => e.preventDefault && onClick(CLICKED)}>{label}</button>
+  )
 
   test('should be able to render non-instantiated React components', () => {
     const wrapper = mount(<EnhancedComponent component={Button} />)
@@ -99,7 +102,7 @@ describe('EnhancedComponent', () => {
     ])
     const component = <Button collection={collection} />
 
-    const c = mount(<EnhancedComponent component={component}/>)
+    const c = mount(<EnhancedComponent component={component} />)
 
     expect(c.state('collection')).toHaveLength(1)
     collection.reset([])
@@ -107,13 +110,13 @@ describe('EnhancedComponent', () => {
   })
 
   test('should update the state when the model changes', () => {
-    const model = new Backbone.Model({ label: 'Click Me' })
+    const model = new Backbone.Model({label: 'Click Me'})
     const component = <Button model={model} />
 
     const c = mount(<EnhancedComponent component={component} />)
 
     expect(c.state('model').label).toEqual('Click Me')
-    model.set({ label: "Don't Click Me"})
+    model.set({label: "Don't Click Me"})
     expect(c.state('model').label).toEqual("Don't Click Me")
   })
 
@@ -222,10 +225,7 @@ describe('EnhancedComponent', () => {
     }
 
     const wrapper = mount(
-      <EnhancedComponent
-        component={App}
-        initialState={initialState}
-      />
+      <EnhancedComponent component={App} initialState={initialState} />,
     )
     const c = wrapper.find('button')
 
@@ -257,10 +257,7 @@ describe('EnhancedComponent', () => {
 
     const spy = jest.fn()
     const wrapper = mount(
-      <EnhancedComponent
-        component={App}
-        initialState={initialState}
-      />
+      <EnhancedComponent component={App} initialState={initialState} />,
     )
     wrapper.instance().render = spy
 
@@ -415,5 +412,53 @@ describe('EnhancedComponent', () => {
     expect(spy).not.toHaveBeenCalled()
     expect(wrapper.find('div.member').length).toBe(2)
     expect(wrapper.find('div.members').text()).not.toContain('Murderface')
+  })
+
+  test('should pass state as first argument to external action', () => {
+    const spy = jest.fn()
+    const state = {item: 'A'}
+
+    const ConnectedButton = connect(
+      state => state,
+      store => {
+        const {onClick} = store.getExternalActions()
+        return {onClick}
+      },
+    )(Button)
+
+    const wrapper = mount(
+      <EnhancedComponent
+        component={ConnectedButton}
+        initialState={state}
+        externalActions={{onClick: spy}}
+      />,
+    )
+
+    wrapper.find(Button).simulate('click')
+    expect(spy).toHaveBeenCalledWith(state, CLICKED)
+  })
+
+  test('should not pass state as first argument to stateless external action', () => {
+    const spy = jest.fn()
+    const state = {item: 'A'}
+
+    const ConnectedButton = connect(
+      state => state,
+      store => {
+        const {onClick} = store.getStatelessExternalActions()
+        return {onClick}
+      },
+    )(Button)
+
+    const wrapper = mount(
+      <EnhancedComponent
+        component={ConnectedButton}
+        initialState={state}
+        externalActions={{onClick: spy}}
+      />,
+    )
+
+    wrapper.find(Button).simulate('click')
+    expect(spy).toHaveBeenCalledWith(CLICKED)
   })
 })

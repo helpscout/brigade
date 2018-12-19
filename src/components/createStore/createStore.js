@@ -64,6 +64,24 @@ export class BrigadeStore {
     })
   }
 
+  /**
+   * The first argument of an action is `state`. This method returns the
+   * externalActions re-mapped such that the first argument is dropped.
+   * This is useful if the code you are connecting via externalActions has no
+   * concept of state or the store.
+   * @return Object
+   */
+  getStatelessExternalActions() {
+    const actions = this.getExternalActions()
+    return Object.keys(actions).reduce(
+      (accumulator, key) => ({
+        ...accumulator,
+        [key]: (state, ...rest) => actions[key](...rest),
+      }),
+      {},
+    )
+  }
+
   getExternalActions = () => this.externalActions
   getState = () => this.__store.getState()
   setState = newState => this.__store.setState(newState)

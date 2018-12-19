@@ -183,6 +183,15 @@ component tree. We can use the `connect` HOF to grab what we need from the state
 This means that only the connected component will receive new props on state
 changes.
 
+This technique, of syncing models and collections in the store, is the
+recommended way for mounting entire React apps in a Backbone or Marionette
+view where you want to use existing models, collections and instance methods
+that operate on those models and collections. Essentially, it allows us to
+architect the app using patterns popularized by Redux, creating a path forward
+to eventually repace the Backbone or Marionette piece with Redux or a similar
+solution. Doing so should not involve much if any changes to the React
+app.
+
 ```
 components() {
   '#app': App,
@@ -199,6 +208,9 @@ components() {
 In the above example, we also put some instance methods from the view into the
 `externalActions`. These external actions can be retrieved from the store and
 passed as props to a component via the `connect` HOF.
+
+You should note that the first argument to `addPerson` in this example will be
+the current `state`.
 
 ```
 import { connect } from '@helpscout/brigade'
@@ -222,14 +234,22 @@ You will note that actions are rebound to receive the current `state` as the
 first argument so if your external action does not accept that argument you
 will need to remap the action as shown in the example above.
 
-This technique, of syncing models and collections in the store, is the
-recommended way for mounting entire React apps in a Backbone or Marionette
-view where you want to use existing models, collections and instance methods
-that operate on those models and collections. Essentially, it allows us to
-architect the app using patterns popularized by Redux, creating a path forward
-to eventually repace the Backbone or Marionette piece with Redux or a similar
-solution. Doing so should not involve much if any changes to the React
-app.
+Since it is common that your external actions will have no concept of the state
+or store, we have created a helper method. `store.getStatelessExternalActions()`
+returns the external actions where each action has been remapped to remove
+`state` as the first argument.
+
+```
+const actions = store => {
+  const { addPerson } = store.getStatelessExternalActions()
+  return { addPerson }
+}
+connect(null, addPerson)(Form)
+```
+
+You will note in the above example, we do not need to remap the `addPerson`
+action. Because we used `store.getStatelessExternalActions()` the first
+argument will be the `person`, not the `state`.
 
 ## Ideal Use Case
 
