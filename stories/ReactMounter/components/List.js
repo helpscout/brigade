@@ -8,7 +8,7 @@ import {connect} from '../../../src'
 class List extends PureComponent {
   static propTypes = {
     addItem: PropTypes.func,
-    items: PropTypes.array,
+    items: PropTypes.array.isRequired,
     list: PropTypes.shape({
       name: PropTypes.string,
       version: PropTypes.number,
@@ -66,8 +66,8 @@ const mapStateToProps = ({items, list}) => ({
   items,
   list,
 })
-const actions = store => store.getExternalActions()
+const mapActionsToProps = store => store.getExternalActions()
 export const ConnectedList = connect(
   mapStateToProps,
-  actions,
+  mapActionsToProps,
 )(List)

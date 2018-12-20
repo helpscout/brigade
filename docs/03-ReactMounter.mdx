@@ -217,13 +217,13 @@ import { connect } from '@helpscout/brigade'
 import Form from '../Form'
 
 const mapStateToProps = ({ person, people }) => ({ person, people })
-const actions = store => {
+const mapActionsToProps = store => {
   const { addPerson } = store.getExternalActions()
   return {
     addPerson: (state, person) => addPerson(person)
   }
 }
-connect(mapStateToProps, addPerson)(Form)
+connect(mapStateToProps, mapActionsToProps)(Form)
 ```
 
 The above example illustrates how we can grab state and actions out of the store
@@ -240,11 +240,11 @@ returns the external actions where each action has been remapped to remove
 `state` as the first argument.
 
 ```
-const actions = store => {
+const mapActionsToProps = store => {
   const { addPerson } = store.getStatelessExternalActions()
   return { addPerson }
 }
-connect(null, addPerson)(Form)
+connect(null, mapActionsToProps)(Form)
 ```
 
 You will note in the above example, we do not need to remap the `addPerson`

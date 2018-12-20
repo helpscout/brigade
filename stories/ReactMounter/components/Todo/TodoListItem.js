@@ -36,14 +36,12 @@ class TodoListItem extends PureComponent {
   }
 }
 
-const actions = store => {
-  const {removeTodo} = store.getExternalActions()
-  return {
-    removeTodo: (_state, id) => removeTodo(id),
-  }
+const mapActionsToProps = store => {
+  const {removeTodo} = store.getStatelessExternalActions()
+  return {removeTodo}
 }
 
 export default connect(
   null,
-  actions,
+  mapActionsToProps,
 )(TodoListItem)
