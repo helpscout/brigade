@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "scripts": {
     "prestart": "zero prestart",
-    "build": "zero build",
+    "build": "BUILD_WEBPACK=true zero build",
     "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "postversion": "npm publish",
     "lint": "zero lint",
