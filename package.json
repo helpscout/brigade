@@ -22,7 +22,8 @@
     "build-storybook": "build-storybook",
     "docz": "npm run docz:dev",
     "docz:dev": "docz dev",
-    "docz:build": "docz build"
+    "docz:build": "docz build",
+    "browsers": "npx browserslist"
   },
   "repository": {
     "type": "git",
@@ -79,5 +80,13 @@
   },
   "dependencies": {
     "unistore": "^3.1.0"
-  }
+  },
+  "browserslist": [
+    "IE 11",
+    "Edge >= 16",
+    "Firefox >= 60",
+    "Chrome >= 65",
+    "Safari >= 10",
+    "node 8"
+  ]
 }
