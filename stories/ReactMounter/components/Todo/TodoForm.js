@@ -52,17 +52,12 @@ class TodoForm extends Component {
   }
 }
 
-const actions = store => {
-  const {addTodo} = store.getExternalActions()
-  return {
-    // We are remapping this action because our store re-binds actions to take
-    // state as the first argument, but the `addTodo` method which came from
-    // our Marionette view expects `todo` as the first and only argument.
-    addTodo: (state, todo) => addTodo(todo),
-  }
+const mapActionsToProps = store => {
+  const {addTodo} = store.getStatelessExternalActions()
+  return {addTodo}
 }
 
 export default connect(
   null,
-  actions,
+  mapActionsToProps,
 )(TodoForm)
