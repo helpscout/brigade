@@ -1,11 +1,11 @@
 {
   "name": "@helpscout/brigade",
-  "version": "1.0.1",
+  "version": "1.0.2-rc.0",
   "description": "Backbone-controlled React components",
   "main": "dist/index.js",
   "scripts": {
     "prestart": "zero prestart",
-    "build": "zero build",
+    "build": "BUILD_WEBPACK=true zero build",
     "coverage": "nyc report --temp-directory=coverage --reporter=text-lcov | coveralls",
     "postversion": "npm publish",
     "lint": "zero lint",
@@ -22,7 +22,8 @@
     "build-storybook": "build-storybook",
     "docz": "npm run docz:dev",
     "docz:dev": "docz dev",
-    "docz:build": "docz build"
+    "docz:build": "docz build",
+    "browsers": "npx browserslist"
   },
   "repository": {
     "type": "git",
@@ -79,5 +80,13 @@
   },
   "dependencies": {
     "unistore": "^3.1.0"
-  }
+  },
+  "browserslist": [
+    "IE 11",
+    "Edge >= 16",
+    "Firefox >= 60",
+    "Chrome >= 65",
+    "Safari >= 10",
+    "node 8"
+  ]
 }
