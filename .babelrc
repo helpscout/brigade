@@ -1,1 +1,4 @@
-{"presets": ["@helpscout/zero/babel"]}
+{
+  "presets": ["@helpscout/zero/babel"],
+  "plugins": ["@babel/plugin-transform-modules-commonjs"]
+}
