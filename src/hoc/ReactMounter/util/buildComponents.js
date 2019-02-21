@@ -24,6 +24,7 @@ const buildComponents = (
 ) => {
   return Object.keys(components)
     .map(selector => {
+      // TODO Use StatefulReactView here
       const el = getEl(view, selector)
       const builder = getBuilder(components, selector)
 

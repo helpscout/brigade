@@ -46,8 +46,11 @@
     "@helpscout/helix": "^0.1.0",
     "@helpscout/hsds-react": "^2.8.4",
     "@helpscout/zero": "1.0.3",
-    "@storybook/addon-actions": "^4.0.9",
+    "@storybook/addon-actions": "^4.1.12",
+    "@storybook/addon-knobs": "^4.1.12",
     "@storybook/addon-links": "^4.0.9",
+    "@storybook/addon-options": "^4.1.12",
+    "@storybook/addon-storysource": "^4.1.12",
     "@storybook/addons": "^4.0.9",
     "@storybook/react": "^4.0.9",
     "babel-loader": "^8.0.4",
@@ -71,15 +74,21 @@
     "react": "16.6.3",
     "react-dom": "16.6.3",
     "react-test-renderer": "^16.6.3",
+    "storybook-readme": "^4.0.5",
     "underscore": "1.6.0",
     "webpack": "^4.26.1"
   },
   "peerDependencies": {
     "backbone": "^1",
     "react": "^15 || ^16",
-    "react-dom": "^15 || ^16"
+    "react-dom": "^15 || ^16",
+    "react-redux": "^6.0.1",
+    "redux": "latest",
+    "redux-thunk": "^2.3.0"
   },
   "dependencies": {
+    "react-redux": "^6.0.1",
+    "redux-thunk": "^2.3.0",
     "unistore": "^3.1.0"
   },
   "browserslist": [
