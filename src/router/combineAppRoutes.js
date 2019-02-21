@@ -23,8 +23,8 @@ export const combineAppRoutes = (routeOptions = defaultRouteOptions) => {
   }, {})
 
   return {
-    ...marionetteRoutes,
     ...enhancedReactRoutes,
+    ...marionetteRoutes,
   }
 }
 
