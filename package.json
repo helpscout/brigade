@@ -12,6 +12,7 @@
     "format": "zero format",
     "validate": "zero validate",
     "precommit": "zero pre-commit",
+    "dev": "npm run test:watch",
     "test": "zero test --coverage",
     "test:watch": "zero test --watch",
     "version": "npm run build",
