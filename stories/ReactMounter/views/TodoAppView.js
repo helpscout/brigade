@@ -1,7 +1,6 @@
 import Backbone from 'backbone'
 import Marionette from 'backbone.marionette'
 import {ReactMounter} from '../../../src'
-
 import TodoApp from '../components/Todo/App'
 import template from '../templates/template'
 

@@ -43,7 +43,8 @@
   "homepage": "https://github.com/helpscout/brigade#readme",
   "devDependencies": {
     "@babel/core": "^7.1.6",
-    "@helpscout/hsds-react": "^2.2.1",
+    "@helpscout/helix": "^0.1.0",
+    "@helpscout/hsds-react": "^2.8.4",
     "@helpscout/zero": "1.0.3",
     "@storybook/addon-actions": "^4.0.9",
     "@storybook/addon-links": "^4.0.9",

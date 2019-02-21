@@ -6,6 +6,9 @@ import ComponentView from './views/ComponentView'
 import Layout from './views/Layout'
 import Marionette from 'backbone.marionette'
 import CompositeView from './views/CompositeView'
+import TaskSpec from '../utils/TaskSpec'
+import {makeListModel} from './views/TodoAppView'
+import TodoAppView from './views/TodoAppView'
 
 const stories = storiesOf('ReactView', module)
 
@@ -38,4 +41,10 @@ stories.add('CompositeView', () => {
     {id: 3, name: 'Rick'},
   ])
   return <ViewWrapper renderView={() => new CompositeView({collection})} />
+})
+
+stories.add('ToDo App', () => {
+  const model = new Backbone.Model(makeListModel())
+  const collection = new Backbone.Collection(TaskSpec.generate(3))
+  return <ViewWrapper renderView={() => new TodoAppView({model, collection})} />
 })
