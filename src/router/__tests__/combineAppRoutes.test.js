@@ -24,7 +24,7 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes})
 
     expect(combinedRoutes).toEqual({
-      'reactApp/(*notFound)': 'someReactApp',
+      'reactApp(/)(*notFound)': 'someReactApp',
     })
   })
 
@@ -38,9 +38,9 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes})
 
     expect(combinedRoutes).toEqual({
-      'reactApp/(*notFound)': 'someReactApp',
-      'anotherReactApp/(*notFound)': 'yetAnotherReactApp',
-      'thirdOne/(*notFound)': 'whyNot',
+      'reactApp(/)(*notFound)': 'someReactApp',
+      'anotherReactApp(/)(*notFound)': 'yetAnotherReactApp',
+      'thirdOne(/)(*notFound)': 'whyNot',
     })
   })
 
@@ -52,7 +52,7 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes})
 
     expect(combinedRoutes).toEqual({
-      'one/two/three/(*notFound)': 'someReactApp',
+      'one/two/three(/)(*notFound)': 'someReactApp',
     })
   })
 
@@ -64,7 +64,7 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes})
 
     expect(combinedRoutes).toEqual({
-      'reactApp/(*notFound)': 'someReactApp',
+      'reactApp(/)(*notFound)': 'someReactApp',
     })
   })
 
@@ -76,7 +76,7 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes})
 
     expect(combinedRoutes).toEqual({
-      'one/two/three/(*notFound)': 'someReactApp',
+      'one/two/three(/)(*notFound)': 'someReactApp',
     })
   })
 
@@ -95,9 +95,9 @@ describe('combineAppRoutes', () => {
     const combinedRoutes = combineAppRoutes({reactRoutes, marionetteRoutes})
 
     expect(combinedRoutes).toEqual({
-      'reactApp/(*notFound)': 'someReactApp',
-      'anotherReactApp/(*notFound)': 'yetAnotherReactApp',
-      'thirdOne/(*notFound)': 'whyNot',
+      'reactApp(/)(*notFound)': 'someReactApp',
+      'anotherReactApp(/)(*notFound)': 'yetAnotherReactApp',
+      'thirdOne(/)(*notFound)': 'whyNot',
       'app/sub(/)': 'app',
       'settings(/)': 'settingsApp',
     })

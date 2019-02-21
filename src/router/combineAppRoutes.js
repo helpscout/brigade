@@ -6,7 +6,7 @@ export const defaultRouteOptions = {
 export const sanitizeRouteKey = route => {
   const [baseRoute] = route.split('(/)')
 
-  return `${baseRoute}/(*notFound)`
+  return `${baseRoute}(/)(*notFound)`
 }
 
 export const combineAppRoutes = (routeOptions = defaultRouteOptions) => {
