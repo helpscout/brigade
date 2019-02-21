@@ -73,6 +73,9 @@
     "prop-types": "latest",
     "react": "16.6.3",
     "react-dom": "16.6.3",
+    "react-redux": "^6.0.1",
+    "redux": "latest",
+    "redux-thunk": "^2.3.0",
     "react-test-renderer": "^16.6.3",
     "storybook-readme": "^4.0.5",
     "underscore": "1.6.0",
@@ -87,8 +90,6 @@
     "redux-thunk": "^2.3.0"
   },
   "dependencies": {
-    "react-redux": "^6.0.1",
-    "redux-thunk": "^2.3.0",
     "unistore": "^3.1.0"
   },
   "browserslist": [
