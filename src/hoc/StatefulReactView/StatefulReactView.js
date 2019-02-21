@@ -6,7 +6,7 @@ import Marionette from 'backbone.marionette'
 const StatefulReactView = (View = Marionette.ItemView) => {
   const RV = ReactView(View)
   return RV.extend({
-    initialize({store} = {}) {
+    initialize({store}) {
       View.prototype.initialize.apply(this, arguments)
       this.__store = store
     },
