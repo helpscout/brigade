@@ -30,4 +30,4 @@ To achieve a loosely coupled, highly cohesive solution with an explicit contract
 
 ## This Example
 
-This example shows a case where initial `preloadedState` is provided in the parent application, but subsequently all application state logic lives inside React/Redux. This stands in contrast to the External State example, where state lives in Backbone Models/Collections and is injected into the store, and manually kept up to date with the use of `externalStateReducers`.
+This example shows a case where initial `preloadedState` is provided in the parent application, but subsequently all application state logic lives inside React/Redux. This stands in contrast to the External State example, where a portion of the state lives in Backbone Models/Collections and is injected into the store, and manually kept up to date with the use of `createExternalReducers`.

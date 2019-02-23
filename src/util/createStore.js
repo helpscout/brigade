@@ -5,12 +5,19 @@ import {
 } from 'redux'
 import thunk from 'redux-thunk'
 
+/**
+ * Create a ReduxStore with a given preloadedState, reducers, middlewares, or thunk extraArgument`
+ * @param preloadedState
+ * @param reducers
+ * @param middlewares
+ * @param extraArgument
+ * @return {Store<any, Action> & {dispatch: any}}
+ */
 const createStore = ({
   preloadedState,
   reducers,
   middlewares,
   extraArgument,
-  createStore,
 }) => {
   if (!middlewares) {
     middlewares = extraArgument

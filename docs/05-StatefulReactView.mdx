@@ -1,0 +1,167 @@
+---
+name: StatefulReactView
+route: /stateful-react-view
+---
+
+# StatefulReactView
+
+StatefulReactView is a higher order function (HOF) that ships with Brigade since 1.0.4.
+
+> StatefulReactView requires Marionette 1.8.x
+
+## Overview
+
+StatefulReactView builds off of ReactView with a dead simple `template` method that allows you to return a React
+Component in lieu of an HTML string.
+
+What's different is that whereas ReactView expects you to manually pass any props you may want in to the React Component
+in `template()`, StatefulReactView expects to be passed a Redux `store`, which it smashes into a `<Provider>` and wraps
+around the Component returned from `template()`.
+
+This is a very powerful pattern which allows for a completely React/Redux-based development to occur inside the app,
+with a Redux store being passed in from outside, typically at the Router/Controller level.
+
+**StatefulReactView is considered best practice for building complex React/Redux apps inside Marionette**
+
+## Basic Usage
+
+```
+import {StatefulReactView, createStore} from '@helpscout/brigade'
+// regular old Redux reducers
+import reducers from './reducers'
+import React from 'react'
+
+const preloadedState = { todos: [] }
+// All application state and logic lives in the Redux store
+const store = createStore({ reducers, preloadedState })
+const TodoAppView = StatefulReactView().extend({
+  template(props) {
+    return <TodoApp {...props} />
+  }
+}))
+
+region.show(new TodoAppView({ store }))
+```
+
+In the above example, the TodoApp is rendered inside a `<Provider>` containing the
+`store`, allowing use of Containers with `react-redux`'s `connect`.
+
+## createStore and Communication with Legacy App
+
+By default, `createStore` will include [thunk](https://github.com/reduxjs/redux-thunk),
+and allows you to define an `extraArgument` which will be provided to your action
+creators as described [here](https://github.com/reduxjs/redux-thunk#injecting-a-custom-argument).
+This is a very powerful pattern in a React-inside-Backbone context, because it
+allows your Redux action creators to access external resources or APIs from your
+legacy application.
+
+```
+// Some old error notification function
+const extraArgument = { legacyDisplayError }
+const store = createStore({ reducers, preloadedState, extraArgument })
+
+// actions/api.js
+export const fetchUserError = errorMessage => (dispatch, getState, {legacyDisplayError}) => {
+  legacyDisplayError(errorMessage)
+}
+```
+
+## Ideal Use Case: Pure Internal State
+
+The ideal use case for StatefulReactView is to rewrite a large, high-level
+chunk of a Marionette Application with a React-Redux application. It represents
+the penultimate stage of Reactification: just before the Backbone app is
+completely consumed. A good example would be using StatefulReactView to build
+a major page underneath a Backbone Route.
+
+## Handling External State
+
+Sometimes in legacy Backbone Applications undergoing rewrites to React, it is
+necessary to use pieces of state that live in legacy Backbone Models or Collections.
+`StatefulReactView` can be used in conjunction with a few opt-in helpers to allow specific
+slices of Redux state to be managed externally, via Backbone Models and Collections.
+
+### createExternalReducer
+
+Redux does not allow you to directly mutate state. That's kind of the whole point.
+This means that in order for us to allow a slice of Redux state to be controlled
+by an external entity, we need a way to simply update or reset a slice of state
+the Redux way: dispatching an action.
+
+Enter `createExternalReducer`. This utility creates a generic, simple reducer
+and a `reset` action-creator which can be used to reset the slice of state you wish
+to be controlled externally. For example, if you have a `UserModel` you need to keep
+around, and you want to access `user` state inside the Redux application, you can
+achieve this like so:
+
+```
+import { createExternalReducer } from '@helpscout/brigade'
+import internalReducers from './reducers'
+
+const { reducer, reset } = createExternalReducer('user')
+const reducers = {
+  ...internalReducers,
+  user
+}
+const preloadedState = {
+  user: userModel.toJSON()
+}
+
+const store = createStore({ preloadedState, reducers })
+// When the user model changes, dispatch the reset action which will overwrite the slice
+userModel.on('change', () => store.dispatch(reset(userModel.toJSON())))
+
+```
+
+This gives you a fairly straightforward way to inject externally-controlled Redux slices
+into your React application. However, manually binding to model events and dispatching the
+`reset(newState)` entails a lot of boilerplate, so Brigade also provides a more opinionated
+convenience method: `createExternalReducers`
+
+### createExternalReducers
+`createExternalReducers` is built off of `createExternalReducer`, and allows you to pass a map
+of Models and Collections, and returns a map of `externalReducers`, a starting `externalState`,
+and an `unbindAll` method for cleanup. This helper will automatically figure out whether
+entries are models or collections, and listen for the appropriate `change`, `add`, `remove` or
+`reset` events, and automatically dispatch `reset(newState)` actions, ensuring that the
+Backbone-controlled slices of Redux state are kept in sync with their parent entities.
+
+This is very similar to what `ReactMounter` does behind the scenes, but unlike `ReactMounter`,
+you can create ordinary Redux reducers and actions alongside any externally-controlled reducers.
+This means that most of the React application can be built in pure React/Redux; any Backbone-
+-controlled `externalReducers` appear as ordinary state values inside your component layer,
+and these can be replaced with pure Redux state management at your convenience.
+
+### Advanced Usage
+```
+import { createExternalReducer } from '@helpscout/brigade'
+import internalReducers from './reducers'
+
+let store
+// Creates a map of reducers which auto-update as the model or collection's state changes
+const { externalReducers, externalState } = createExternalReducers({
+  user: userModel,
+  customers: customersCollection
+}, () => store)
+
+const reducers = {
+  ...internalReducers,
+  ...externalReducers
+}
+const preloadedState = {
+  ...internalState,
+  ...externalState,
+}
+
+// Expose any callbacks that the React app needs to interact with the model/collection
+const extraArgument = { fetchCustomers: () => customersCollection.fetch() }
+store = createStore({ preloadedState, reducers, extraArgument })
+
+// actions/index.js
+export const fetchCustomerList = () => (dispatch, getState, { fetchCustomers }) => {
+  dispatch({ type: START_LOADING })
+  // Call the external api to fetch the `customerCollection`
+  fetchCustomers()
+    .finally(dispatch({ type: STOP_LOADING })
+}
+```

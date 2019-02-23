@@ -1,9 +1,9 @@
 import createStore from '../createStore'
-import createExternalStateReducer from '../createExternalStateReducer'
+import createExternalReducer from '../createExternalReducer'
 
 describe('createExternalStateReducer tests', () => {
   test('should create a reducer and a reset function that updates the state of the reducer', () => {
-    const {reducer, reset} = createExternalStateReducer('todos')
+    const {reducer, reset} = createExternalReducer('todos')
     const reducers = {todos: reducer}
     const store = createStore({reducers})
     store.dispatch(reset(['Clean Room', 'Wash Dishes']))
@@ -12,7 +12,7 @@ describe('createExternalStateReducer tests', () => {
 
   test('should respect preloadedState', () => {
     const todos = ['Clean Room', 'Mow Lawn']
-    const {reducer, reset} = createExternalStateReducer('todos')
+    const {reducer, reset} = createExternalReducer('todos')
     const reducers = {todos: reducer}
     const preloadedState = {todos}
     const store = createStore({reducers, preloadedState})
@@ -23,7 +23,7 @@ describe('createExternalStateReducer tests', () => {
 
   test('should ignore unknown action types', () => {
     const todos = ['Clean Room', 'Mow Lawn']
-    const {reducer, reset} = createExternalStateReducer('todos')
+    const {reducer, reset} = createExternalReducer('todos')
     const reducers = {todos: reducer}
     const preloadedState = {todos}
     const store = createStore({reducers, preloadedState})
@@ -35,7 +35,7 @@ describe('createExternalStateReducer tests', () => {
   })
 
   test('should respect initialState', () => {
-    const {reducer, reset} = createExternalStateReducer('todos', ['Default'])
+    const {reducer, reset} = createExternalReducer('todos', ['Default'])
     const reducers = {todos: reducer}
     const store = createStore({reducers})
     expect(store.getState()).toEqual({todos: ['Default']})
@@ -54,7 +54,7 @@ describe('createExternalStateReducer tests', () => {
       }
     }
 
-    const {reducer, reset} = createExternalStateReducer('todos', ['Default'])
+    const {reducer, reset} = createExternalReducer('todos', ['Default'])
     const reducers = {
       count,
       todos: reducer,

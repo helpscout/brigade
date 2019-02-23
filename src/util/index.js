@@ -1,5 +1,5 @@
 import result from './result'
 import createStore from './createStore'
-import createExternalStateReducer from './createExternalStateReducer'
+import { createExternalReducer, createExternalReducers }  from './createExternalReducer'
 
-export {result, createStore, createExternalStateReducer}
+export {result, createStore, createExternalReducer, createExternalReducers}

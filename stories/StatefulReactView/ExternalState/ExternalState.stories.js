@@ -3,65 +3,100 @@ import {storiesOf} from '@storybook/react'
 import ViewWrapper from '../../common/components/ViewWrapper'
 import Backbone from 'backbone'
 import TaskSpec from '../../utils/TaskSpec'
-import TodoAppView from './views/TodoAppView'
 import createStore from '../../../src/util/createStore'
-import todoReducers from './reducers'
-import {faker} from '@helpscout/helix'
-import createExternalStateReducer from '../../../src/util/createExternalStateReducer'
+import internalReducers from './reducers'
+import { createExternalReducers } from '../../../src/util/createExternalReducer'
 import ExternalState from './ExternalState.md'
 import withReadme from 'storybook-readme/with-readme'
 import makeListModel from '../../utils/makeListModel'
+import Marionette from 'backbone.marionette'
+import StatefulReactView from '../../../src/hoc/StatefulReactView'
+import TodoApp from './components/App'
 
 const stories = storiesOf('StatefulReactView', module)
+
+const TodoAppView = StatefulReactView().extend({
+  template() {
+    return <TodoApp />
+  },
+})
+
+// This View takes a Model and lets you set its `name`
+const LegacyView = Marionette.ItemView.extend({
+  initialize() {
+    this.listenTo(this.model, 'change', this.render)
+  },
+  template({ name }) {
+    return `
+    <div>
+      <h3>Legacy Backbone View</h3>
+      <input type="text" class="js-name" value="${name}"/>
+      <button>Update Name</button>
+    </div>
+    <hr/>
+    `
+  },
+  ui: {
+    input: '.js-name',
+    button: 'button',
+  },
+  events: {
+    'click @ui.button': 'updateName',
+  },
+  updateName() {
+    const name = this.ui.input.val()
+    this.model.set({ name })
+  }
+})
+
+// Simple Layout that renders a Backbone View in the header and the StatefulReactView in the body
+const Layout = Marionette.Layout.extend({
+  template() {
+    return `<div class="js-header"></div><div class="js-body"></div>`
+  },
+  regions: {
+    header: '.js-header',
+    body: '.js-body',
+  },
+  onShow() {
+    const { store } = this.options
+    const { model } = this
+    this.header.show(new LegacyView({ model }))
+    this.body.show(new TodoAppView({ store }))
+  }
+})
 
 stories.add(
   'External State',
   withReadme(ExternalState, () => {
-    // State lives in Backbone...
+    // A portion of state lives inside a Backbne Model we cannot replace for Reasons™
     const model = new Backbone.Model(makeListModel())
-    const collection = new Backbone.Collection(TaskSpec.generate(3))
 
-    // Create externalStateReducers to allow us to control the state of these reducers externally,
-    // i.e. when models/collections change
-    const {reducer: todos, reset: resetTodos} = createExternalStateReducer(
-      'todos',
-      [],
-    )
-    const {reducer: meta, reset: resetMeta} = createExternalStateReducer(
-      'meta',
-      [],
-    )
-    const reducers = {
-      ...todoReducers,
-      todos,
-      meta,
-    }
-
-    const preloadedState = {
-      todos: collection.toJSON(),
-      meta: model.toJSON(),
-    }
-
-    const addTodo = todo => collection.add({...todo, id: faker.random.uuid()()})
-    const removeTodo = id => collection.remove(id)
-    const reset = () =>
+    // Mock fetching the meta model
+    const refreshMeta = () =>
       new Promise(resolve => {
         setTimeout(() => {
           model.set(makeListModel())
-          collection.reset(TaskSpec.generate(3))
           resolve()
         }, 1000)
       })
-    const extraArgument = {addTodo, removeTodo, reset}
+    const extraArgument = { refreshMeta }
 
-    const store = createStore({preloadedState, reducers, extraArgument})
+    // Automatically create a map of reducers which will auto-update as the model or collection's state changes
+    const { externalReducers, externalState } = createExternalReducers({
+      // can also pass in collections here and they will be set up to automatically control a slice of state as well
+      meta: model
+    }, () => store)
 
-    // Manually dispatch the `reset` actions provided by createExternalStateReducer()
-    model.on('change sync', () => store.dispatch(resetMeta(model.toJSON())))
-    collection.on('change sync reset add remove', () =>
-      store.dispatch(resetTodos(collection.toJSON())),
-    )
-
-    return <ViewWrapper renderView={() => new TodoAppView({store})} />
+    const reducers = {
+      ...internalReducers,
+      ...externalReducers
+    }
+    const preloadedState = {
+      ...externalState,
+      todos: TaskSpec.generate(2, 4)
+    }
+    const store = createStore({ preloadedState, reducers, extraArgument })
+    return <ViewWrapper renderView={() => new Layout({ store, model })} />
   }),
 )
