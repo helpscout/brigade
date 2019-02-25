@@ -5,7 +5,7 @@ import Backbone from 'backbone'
 import TaskSpec from '../../utils/TaskSpec'
 import createStore from '../../../src/util/createStore'
 import internalReducers from './reducers'
-import { createExternalReducers } from '../../../src/util/createExternalReducer'
+import {createExternalReducers} from '../../../src/util/createExternalReducer'
 import ExternalState from './ExternalState.md'
 import withReadme from 'storybook-readme/with-readme'
 import makeListModel from '../../utils/makeListModel'
@@ -15,17 +15,20 @@ import TodoApp from './components/App'
 
 const stories = storiesOf('StatefulReactView', module)
 
-const getMetaModel = function () {
+export const getMetaModel = function() {
   const model = new Backbone.Model(makeListModel())
   // Fake fetching from the server
-  model.fetch = () => new Promise(resolve => setTimeout(() => {
-      model.set(makeListModel())
-      resolve()
-    }, 1000)
-  )
+  model.fetch = () =>
+    new Promise(resolve =>
+      setTimeout(() => {
+        model.set(makeListModel())
+        resolve()
+      }, 1000),
+    )
   return model
 }
 
+// A React-Redux application
 const TodoAppView = StatefulReactView().extend({
   template() {
     return <TodoApp />
@@ -37,7 +40,7 @@ const LegacyView = Marionette.ItemView.extend({
   initialize() {
     this.listenTo(this.model, 'change', this.render)
   },
-  template({ name }) {
+  template({name}) {
     return `
     <div>
       <h3>Legacy Backbone View</h3>
@@ -56,8 +59,8 @@ const LegacyView = Marionette.ItemView.extend({
   },
   updateName() {
     const name = this.ui.input.val()
-    this.model.set({ name })
-  }
+    this.model.set({name})
+  },
 })
 
 // Simple Layout that renders a Backbone View in the header and the StatefulReactView in the body
@@ -70,11 +73,11 @@ const Layout = Marionette.Layout.extend({
     body: '.js-body',
   },
   onShow() {
-    const { store } = this.options
-    const { model } = this
-    this.header.show(new LegacyView({ model }))
-    this.body.show(new TodoAppView({ store }))
-  }
+    const {store} = this.options
+    const {model} = this
+    this.header.show(new LegacyView({model}))
+    this.body.show(new TodoAppView({store}))
+  },
 })
 
 stories.add(
@@ -84,25 +87,28 @@ stories.add(
     const model = getMetaModel()
 
     const refreshMeta = () => model.fetch()
-    const extraArgument = { refreshMeta }
+    const extraArgument = {refreshMeta}
 
     // Automatically create a map of reducers which will auto-update as the model or collection's state changes
-    const { externalReducers, externalState } = createExternalReducers({
-      // can also pass in collections here and they will be set up to automatically control a slice of state as well
-      meta: model
-    }, () => store)
+    const {externalReducers, externalState} = createExternalReducers(
+      {
+        // can also pass in collections here and they will be set up to automatically control a slice of state as well
+        meta: model,
+      },
+      () => store,
+    )
 
     const reducers = {
       // Combine pure Redux reducers...
       ...internalReducers,
       // with reducers controlled externally by Models and Collections!
-      ...externalReducers
+      ...externalReducers,
     }
     const preloadedState = {
       ...externalState,
-      todos: TaskSpec.generate(2, 4)
+      todos: TaskSpec.generate(2, 4),
     }
-    const store = createStore({ preloadedState, reducers, extraArgument })
-    return <ViewWrapper renderView={() => new Layout({ store, model })} />
+    const store = createStore({preloadedState, reducers, extraArgument})
+    return <ViewWrapper renderView={() => new Layout({store, model})} />
   }),
 )

@@ -6,7 +6,7 @@ import ConnectedListView from './views/ConnectedListView'
 import TodoAppView from './views/TodoAppView'
 import ViewWrapper from '../common/components/ViewWrapper'
 
-storiesOf('ReactMounter', module)
+storiesOf('ReactMounter (deprectated)', module)
   .add('basic', () => <ViewWrapper renderView={() => new BasicView()} />)
   .add('with state', () => <ViewWrapper renderView={() => new ListView()} />)
   .add('with store', () => (
