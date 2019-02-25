@@ -15,6 +15,17 @@ import TodoApp from './components/App'
 
 const stories = storiesOf('StatefulReactView', module)
 
+const getMetaModel = function () {
+  const model = new Backbone.Model(makeListModel())
+  // Fake fetching from the server
+  model.fetch = () => new Promise(resolve => setTimeout(() => {
+      model.set(makeListModel())
+      resolve()
+    }, 1000)
+  )
+  return model
+}
+
 const TodoAppView = StatefulReactView().extend({
   template() {
     return <TodoApp />
@@ -69,17 +80,10 @@ const Layout = Marionette.Layout.extend({
 stories.add(
   'External State',
   withReadme(ExternalState, () => {
-    // A portion of state lives inside a Backbne Model we cannot replace for Reasons™
-    const model = new Backbone.Model(makeListModel())
+    // A portion of state lives inside a Backbone Model we cannot replace for Reasons™
+    const model = getMetaModel()
 
-    // Mock fetching the meta model
-    const refreshMeta = () =>
-      new Promise(resolve => {
-        setTimeout(() => {
-          model.set(makeListModel())
-          resolve()
-        }, 1000)
-      })
+    const refreshMeta = () => model.fetch()
     const extraArgument = { refreshMeta }
 
     // Automatically create a map of reducers which will auto-update as the model or collection's state changes
@@ -89,7 +93,9 @@ stories.add(
     }, () => store)
 
     const reducers = {
+      // Combine pure Redux reducers...
       ...internalReducers,
+      // with reducers controlled externally by Models and Collections!
       ...externalReducers
     }
     const preloadedState = {
