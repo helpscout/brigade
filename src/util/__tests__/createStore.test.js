@@ -19,7 +19,7 @@ describe('createStore tests', () => {
   const preloadedState = {count: 5}
   const reducers = {count}
   test('should combine reducers and create store capable of incrementing/decrementing count', () => {
-    const store = createStore({preloadedState: {count: 5}, reducers})
+    const store = createStore({preloadedState, reducers})
     expect(store.getState()).toEqual({count: 5})
     store.dispatch({type: INCREMENT_COUNT})
     expect(store.getState()).toEqual({count: 6})
@@ -30,7 +30,7 @@ describe('createStore tests', () => {
 
   describe('External Reducers tests', () => {
     test('should add a `store.__unbindExternals` to the store', () => {
-      const store = createStore({preloadedState: {count: 5}, reducers})
+      const store = createStore({preloadedState, reducers})
       expect(store.getState()).toEqual({count: 5})
       expect(store.__unbindExternals).toBeInstanceOf(Function)
     })
@@ -67,7 +67,7 @@ describe('createStore tests', () => {
 
   test('should be able to pass a pre-combined reducer', () => {
     const reducers = combineReducers({count})
-    const store = createStore({preloadedState: {count: 5}, reducers})
+    const store = createStore({preloadedState, reducers})
     expect(store.__unbindExternals).toBe(undefined)
     expect(store.getState()).toEqual({count: 5})
     store.dispatch({type: INCREMENT_COUNT})
