@@ -4,7 +4,7 @@ import createExternalReducer from './createExternalReducer'
 
 /**
  * Create a number of external state reducers, automatically binding to collection or model events and dispatching
- * STATE_RESET_XXX actions to keep them up to date, allowing external control of a portion of Redux state
+ * RESET_STATE_XXX actions to keep them up to date, allowing external control of a portion of Redux state
  *
  * @param modelCollectionMap
  * @param getStore

@@ -1,6 +1,3 @@
-import Backbone from 'backbone'
-import { COLLECTION_EVENTS, MODEL_EVENTS } from '../components/createStore/utils'
-
 /**
  * Create a reducer capable of being reset externally by dispatching the `reset` action
  * @param name
