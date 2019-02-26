@@ -21,39 +21,4 @@ export const createExternalReducer = (name, initialState = '') => {
   return {reducer, reset}
 }
 
-/**
- * Create a number of external state reducers, automatically binding to collection or model events and dispatching
- * STATE_RESET_XXX actions to keep them up to date, allowing external control of a portion of Redux state
- *
- * @param modelCollectionMap
- * @param getStore
- * @return {{externalReducers, externalState, unbindAll: (function(): void)}}
- */
-export const createExternalReducers = (modelCollectionMap, getStore) => {
-  const externalReducers = {}
-  const externalState = {}
-  const eventBindings = []
-  Object.entries(modelCollectionMap).forEach(([name, entity]) => {
-    const { reducer, reset } = createExternalReducer(name)
-    externalReducers[name] = reducer
-    externalState[name] = entity.toJSON()
-    const events =  entity instanceof Backbone.Collection
-      ? COLLECTION_EVENTS
-      : MODEL_EVENTS
-    const callback = () => {
-      const store = getStore()
-      store.dispatch(reset(entity.toJSON()))
-    }
-    entity.on(events, callback)
-    eventBindings.push({entity, events, callback})
-  })
-  const unbindAll = () => eventBindings.forEach(({ entity, events, callback }) => entity.off(events, callback))
-  return {
-    externalReducers,
-    externalState,
-    unbindAll
-  }
-}
-
-
 export default createExternalReducer

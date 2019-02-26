@@ -5,7 +5,6 @@ import Backbone from 'backbone'
 import TaskSpec from '../../utils/TaskSpec'
 import createStore from '../../../src/util/createStore'
 import internalReducers from './reducers'
-import {createExternalReducers} from '../../../src/util/createExternalReducer'
 import ExternalState from './ExternalState.md'
 import withReadme from 'storybook-readme/with-readme'
 import makeListModel from '../../utils/makeListModel'
@@ -87,28 +86,19 @@ stories.add(
     const model = getMetaModel()
 
     const refreshMeta = () => model.fetch()
-    const extraArgument = {refreshMeta}
+    // Expose an external method inside the React/Redux app
+    const extraArgument = { refreshMeta }
 
-    // Automatically create a map of reducers which will auto-update as the model or collection's state changes
-    const {externalReducers, externalState} = createExternalReducers(
-      {
-        // can also pass in collections here and they will be set up to automatically control a slice of state as well
-        meta: model,
-      },
-      () => store,
-    )
-
+    // createStore will auto-bind any Models or Collections it finds in the reducers list
     const reducers = {
-      // Combine pure Redux reducers...
+      meta: model,
       ...internalReducers,
-      // with reducers controlled externally by Models and Collections!
-      ...externalReducers,
     }
     const preloadedState = {
-      ...externalState,
+      meta: model.toJSON(),
       todos: TaskSpec.generate(2, 4),
     }
-    const store = createStore({preloadedState, reducers, extraArgument})
+    const store = createStore({ preloadedState, reducers, extraArgument })
     return <ViewWrapper renderView={() => new Layout({store, model})} />
   }),
 )

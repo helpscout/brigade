@@ -1,0 +1,76 @@
+---
+name: External Reducers
+route: /external-reducers
+---
+
+# External Reducers
+
+## Overview
+
+An External Reducers is a Brigade utility for cases when a Backbone Model or Collection contains stateful information
+that is needed inside the Redux application. Creating an External Reducer will sync changes on the Model/Collection
+to a corresponding slice of state inside the Redux store.
+
+We accomplish this with Brigade's `createStore` function, which allows you to pass a `reducers: {}` object that contains
+both regular reducer functions *and* Backbone Models/Collections. When `createStore` detects a Backbone entity, it
+will automatically create an External Reducer, which will be kept up to date as the entity mutates.
+
+
+## createStore
+
+```
+import { createStore } from '@helpscout/brigade'
+import internalReducers from './reducers'
+
+const user = new Backbone.Model({ name: 'Bobby McGee' })
+const customers = new Backbone.Collection([])
+const reducers = {
+  ...internalReducers,
+  user,
+  customers,
+}
+
+const preloadedState = {
+  user: user.toJSON(),
+  customers: customers.toJSON(),
+}
+
+const store = createStore({ reducers, preloadedState })
+
+const StatefulView = StatefulReactView().extend({
+  template() {
+    // Uses Containers with react-redux's connect() function
+    return <SomeApp/>
+  }
+})
+region.show(new StatefulView({ store })
+
+// StatefulView updates automatically as the model/collection changes
+user.set({ name: 'Janis Joplin' })
+```
+
+## Advanced Usage
+
+Behind the scenes, `createStore` leverages a `createExternalReducer` helper, a low-level utility
+which creates a reducer function and a `reset` action creator. If you need more granular control
+over the Backbone -> Redux data flow, this helper is exposed and can be used directly.
+
+## createExternalReducer
+
+```
+import { createExternalReducer } from '@helpscout/brigade'
+import internalReducers from './reducers'
+
+const { reducer, reset } = createExternalReducer('user')
+const reducers = {
+  ...internalReducers,
+  reducer,
+}
+const preloadedState = {
+  user: userModel.toJSON()
+}
+
+const store = createStore({ preloadedState, reducers })
+// Can manually control when the reset action is dispatched which will update the `user` slice
+userModel.on('some-special-event', () => store.dispatch(reset(userModel.toJSON())))
+```

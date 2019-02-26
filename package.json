@@ -46,8 +46,6 @@
     "@helpscout/helix": "^0.1.0",
     "@helpscout/hsds-react": "^2.8.4",
     "@helpscout/zero": "1.0.3",
-    "@storybook/addon-actions": "^4.1.12",
-    "@storybook/addon-knobs": "^4.1.12",
     "@storybook/addon-links": "^4.1.12",
     "@storybook/addon-options": "^4.1.12",
     "@storybook/addon-storysource": "^4.1.12",

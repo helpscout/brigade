@@ -43,29 +43,6 @@ const TodoAppView = StatefulReactView().extend({
 region.show(new TodoAppView({ store }))
 ```
 
-In the above example, the TodoApp is rendered inside a `<Provider>` containing the
-`store`, allowing use of Containers with `react-redux`'s `connect`.
-
-## createStore and Communication with Legacy App
-
-By default, `createStore` will include [thunk](https://github.com/reduxjs/redux-thunk),
-and allows you to define an `extraArgument` which will be provided to your action
-creators as described [here](https://github.com/reduxjs/redux-thunk#injecting-a-custom-argument).
-This is a very powerful pattern in a React-inside-Backbone context, because it
-allows your Redux action creators to access external resources or APIs from your
-legacy application.
-
-```
-// Some old error notification function
-const extraArgument = { legacyDisplayError }
-const store = createStore({ reducers, preloadedState, extraArgument })
-
-// actions/api.js
-export const fetchUserError = errorMessage => (dispatch, getState, {legacyDisplayError}) => {
-  legacyDisplayError(errorMessage)
-}
-```
-
 ## Ideal Use Case: Pure Internal State
 
 The ideal use case for StatefulReactView is to rewrite a large, high-level
@@ -74,6 +51,10 @@ the penultimate stage of Reactification: just before the Backbone app is
 completely consumed. A good example would be using StatefulReactView to build
 a major page underneath a Backbone Route.
 
+Brigade exposes a [createStore](/external-reducers#createstore) method to help initialize Redux store
+for use with `StatefulReactView`. In cases where the internal React application needs to access
+external legacy callbacks or APIs, this can be achieved [using `extraArgument`](/exposing-external-methods).
+
 ## Handling External State
 
 Sometimes in legacy Backbone Applications undergoing rewrites to React, it is
@@ -81,87 +62,4 @@ necessary to use pieces of state that live in legacy Backbone Models or Collecti
 `StatefulReactView` can be used in conjunction with a few opt-in helpers to allow specific
 slices of Redux state to be managed externally, via Backbone Models and Collections.
 
-### createExternalReducer
-
-Redux does not allow you to directly mutate state. That's kind of the whole point.
-This means that in order for us to allow a slice of Redux state to be controlled
-by an external entity, we need a way to simply update or reset a slice of state
-the Redux way: dispatching an action.
-
-Enter `createExternalReducer`. This utility creates a generic, simple reducer
-and a `reset` action-creator which can be used to reset the slice of state you wish
-to be controlled externally. For example, if you have a `UserModel` you need to keep
-around, and you want to access `user` state inside the Redux application, you can
-achieve this like so:
-
-```
-import { createExternalReducer } from '@helpscout/brigade'
-import internalReducers from './reducers'
-
-const { reducer, reset } = createExternalReducer('user')
-const reducers = {
-  ...internalReducers,
-  user
-}
-const preloadedState = {
-  user: userModel.toJSON()
-}
-
-const store = createStore({ preloadedState, reducers })
-// When the user model changes, dispatch the reset action which will overwrite the slice
-userModel.on('change', () => store.dispatch(reset(userModel.toJSON())))
-
-```
-
-This gives you a fairly straightforward way to inject externally-controlled Redux slices
-into your React application. However, manually binding to model events and dispatching the
-`reset(newState)` entails a lot of boilerplate, so Brigade also provides a more opinionated
-convenience method: `createExternalReducers`
-
-### createExternalReducers
-`createExternalReducers` is built off of `createExternalReducer`, and allows you to pass a map
-of Models and Collections, and returns a map of `externalReducers`, a starting `externalState`,
-and an `unbindAll` method for cleanup. This helper will automatically figure out whether
-entries are models or collections, and listen for the appropriate `change`, `add`, `remove` or
-`reset` events, and automatically dispatch `reset(newState)` actions, ensuring that the
-Backbone-controlled slices of Redux state are kept in sync with their parent entities.
-
-This is very similar to what `ReactMounter` does behind the scenes, but unlike `ReactMounter`,
-you can create ordinary Redux reducers and actions alongside any externally-controlled reducers.
-This means that most of the React application can be built in pure React/Redux; any Backbone-
--controlled `externalReducers` appear as ordinary state values inside your component layer,
-and these can be replaced with pure Redux state management at your convenience.
-
-### Advanced Usage
-```
-import { createExternalReducer } from '@helpscout/brigade'
-import internalReducers from './reducers'
-
-let store
-// Creates a map of reducers which auto-update as the model or collection's state changes
-const { externalReducers, externalState } = createExternalReducers({
-  user: userModel,
-  customers: customersCollection
-}, () => store)
-
-const reducers = {
-  ...internalReducers,
-  ...externalReducers
-}
-const preloadedState = {
-  ...internalState,
-  ...externalState,
-}
-
-// Expose any callbacks that the React app needs to interact with the model/collection
-const extraArgument = { fetchCustomers: () => customersCollection.fetch() }
-store = createStore({ preloadedState, reducers, extraArgument })
-
-// actions/index.js
-export const fetchCustomerList = () => (dispatch, getState, { fetchCustomers }) => {
-  dispatch({ type: START_LOADING })
-  // Call the external api to fetch the `customerCollection`
-  fetchCustomers()
-    .finally(dispatch({ type: STOP_LOADING })
-}
-```
+Brigade allows you to inject externally-managed state through the use of [External Reducers](/external-reducers).

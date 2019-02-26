@@ -1,4 +1,5 @@
 import createStore from '../createStore'
+import Backbone from 'backbone'
 import {combineReducers} from 'redux'
 
 describe('createStore tests', () => {
@@ -27,9 +28,47 @@ describe('createStore tests', () => {
     expect(store.getState()).toEqual({count: 4})
   })
 
-  test('should be able to pass a pre-combined reducer ', () => {
+  describe('External Reducers tests', () => {
+    test('should add a `store.__unbindExternals` to the store', () => {
+      const store = createStore({preloadedState: {count: 5}, reducers})
+      expect(store.getState()).toEqual({count: 5})
+      expect(store.__unbindExternals).toBeInstanceOf(Function)
+    })
+
+    test('should update external reducers when model changes', () => {
+      const user = new Backbone.Model({ name: 'Bob' })
+      const reducers = {
+        count,
+        user,
+      }
+      const preloadedState = { count: 5, user: user.toJSON() }
+      const store = createStore({preloadedState, reducers })
+      expect(store.getState()).toEqual({count: 5, user: { name: 'Bob' }})
+      user.set('name', 'Janis')
+      expect(store.getState()).toEqual({count: 5, user: { name: 'Janis' }})
+    })
+
+    test('should stop updating external reducers when store.__unbindExternals() is called', () => {
+      const user = new Backbone.Model({ name: 'Bob' })
+      const reducers = {
+        count,
+        user,
+      }
+      const preloadedState = { count: 5, user: user.toJSON() }
+      const store = createStore({preloadedState, reducers })
+      expect(store.getState()).toEqual({count: 5, user: { name: 'Bob' }})
+      user.set('name', 'Janis')
+      expect(store.getState()).toEqual({count: 5, user: { name: 'Janis' }})
+      store.__unbindExternals()
+      user.set('name', 'Jenny')
+      expect(store.getState()).toEqual({count: 5, user: { name: 'Janis' }})
+    })
+  })
+
+  test('should be able to pass a pre-combined reducer', () => {
     const reducers = combineReducers({count})
     const store = createStore({preloadedState: {count: 5}, reducers})
+    expect(store.__unbindExternals).toBe(undefined)
     expect(store.getState()).toEqual({count: 5})
     store.dispatch({type: INCREMENT_COUNT})
     expect(store.getState()).toEqual({count: 6})

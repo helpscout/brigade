@@ -1,4 +1,4 @@
-import { createExternalReducers } from '../createExternalReducer'
+import { createExternalReducers } from '../createExternalReducers'
 import Backbone from 'backbone'
 import configureStore from 'redux-mock-store'
 
@@ -16,13 +16,12 @@ describe('createExternalReducers tests', () => {
     store = mockStore()
     getStore = () => store
   })
-  test('should return externalReducers, externalState, and unbindAll ', () => {
+  test('should return externalReducers and unbindExternals ', () => {
     const getStore = () => store
-    const { externalReducers, externalState, unbindAll } = createExternalReducers({ user, customers }, getStore)
-    expect(unbindAll).toBeInstanceOf(Function)
+    const { externalReducers, unbindExternals } = createExternalReducers({ user, customers }, getStore)
+    expect(unbindExternals).toBeInstanceOf(Function)
     expect(externalReducers.user).toBeInstanceOf(Function)
     expect(externalReducers.customers).toBeInstanceOf(Function)
-    expect(externalState).toEqual({ user: user.toJSON(), customers: customers.toJSON() })
   })
 
   describe('action dispatcher tests', () => {
@@ -33,12 +32,12 @@ describe('createExternalReducers tests', () => {
         expect(store.getActions()).toEqual([{ type: 'RESET_STATE_user', state: user.toJSON() }])
       })
 
-      test('unbindAll should unbind automatic reset actions', () => {
-        const { unbindAll } = createExternalReducers({ user }, getStore)
+      test('unbindExternals should unbind automatic reset actions', () => {
+        const { unbindExternals } = createExternalReducers({ user }, getStore)
         user.set('name', 'Billy')
         expect(store.getActions()).toEqual([{ type: 'RESET_STATE_user', state: user.toJSON() }])
         store.clearActions()
-        unbindAll()
+        unbindExternals()
         user.set('name', 'Bob')
         expect(store.getActions()).toEqual([])
       })
@@ -64,12 +63,12 @@ describe('createExternalReducers tests', () => {
         expect(store.getActions()).toEqual([{ type: 'RESET_STATE_customers', state: [] }])
       })
 
-      test('unbindAll should unbind automatic reset actions', () => {
-        const { unbindAll } = createExternalReducers({ customers }, getStore)
+      test('unbindExternals should unbind automatic reset actions', () => {
+        const { unbindExternals } = createExternalReducers({ customers }, getStore)
         customers.add(new Backbone.Model({ id: 4, name: 'Billy' }))
         expect(store.getActions()).toEqual([{ type: 'RESET_STATE_customers', state: customers.toJSON() }])
         store.clearActions()
-        unbindAll()
+        unbindExternals()
         customers.add(new Backbone.Model({ id: 5, name: 'Bob' }))
         customers.remove(1)
         customers.reset([])
@@ -95,13 +94,6 @@ describe('createExternalReducers tests', () => {
       const customersAction = { type: 'RESET_STATE_customers', state: customersState }
 
       expect(externalReducers.customers({}, customersAction)).toEqual(customersState)
-    })
-  })
-
-  describe('preloaded state tests', () => {
-    test('should return a preloaded state that matces the models/collections `.toJSON()` calls', () => {
-      const { externalState } = createExternalReducers({ user, customers }, getStore)
-      expect(externalState).toEqual({ user: user.toJSON(), customers: customers.toJSON() })
     })
   })
 })

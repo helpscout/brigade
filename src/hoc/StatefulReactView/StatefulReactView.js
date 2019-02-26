@@ -11,16 +11,18 @@ const StatefulReactView = (View = Marionette.ItemView) => {
       this.__store = store
     },
 
+    renderComponent: function () {
+      return <Provider store={ this.__store }>{ this.template() }</Provider>
+    },
+
     render() {
       this._ensureElement()
       this._triggerBeforeRendered()
       const isRerender = !!this._component
-      this._component = (
-        <Provider store={this.__store}>{this.template()}</Provider>
-      )
+      this._component = this.renderComponent()
       if (isRerender) {
         // If we are re-rendering, we want to call ReactDOM.render() to refresh
-        this.renderComponent()
+        this.mountComponent()
       }
       this._triggerRendered()
     },

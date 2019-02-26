@@ -1,21 +1,23 @@
 import {
   applyMiddleware,
-  combineReducers,
   createStore as createStoreRedux,
 } from 'redux'
+import { combineReducers } from './combineReducers'
 import thunk from 'redux-thunk'
 
 /**
  * Create a ReduxStore with a given preloadedState, reducers, middlewares, or thunk extraArgument`
+ *
+ * Also adds a `__unbindExternals` method to the store to allow unbinding of external reducer events
  * @param preloadedState
- * @param reducers
+ * @param reducerMap
  * @param middlewares
  * @param extraArgument
- * @return {Store<any, Action> & {dispatch: any}}
+ * @return {(Store<any, Action> & {dispatch: any}) | *}
  */
 const createStore = ({
   preloadedState,
-  reducers,
+  reducers : reducerMap,
   middlewares,
   extraArgument,
 }) => {
@@ -24,14 +26,19 @@ const createStore = ({
       ? [thunk.withExtraArgument(extraArgument)]
       : [thunk]
   }
-  if (typeof reducers === 'object') {
-    reducers = combineReducers(reducers)
+
+  if (typeof reducerMap !== 'object') {
+    // if reducers is passed in already-combined, just use it
+    return createStoreRedux(reducerMap, preloadedState, applyMiddleware(...middlewares))
   }
-  return createStoreRedux(
+  const { reducers, unbindExternals } = combineReducers(reducerMap, () => store)
+  const store = createStoreRedux(
     reducers,
     preloadedState,
     applyMiddleware(...middlewares),
   )
+  store.__unbindExternals = unbindExternals
+  return store
 }
 
 export default createStore
