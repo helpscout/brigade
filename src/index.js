@@ -4,5 +4,6 @@ export {
   createStore,
   createExternalReducer,
   createExternalReducers,
+  combineReducers,
 } from './util'
 export {combineAppRoutes} from './router'

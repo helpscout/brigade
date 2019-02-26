@@ -1,12 +1,10 @@
 import {addDecorator, configure} from '@storybook/react'
 import {withOptions} from '@storybook/addon-options'
-import {withKnobs} from '@storybook/addon-knobs'
 import '@storybook/addon-storysource/register'
 
 // side-effect!
 import '@helpscout/hsds-react/css/blue.css'
 
-addDecorator(withKnobs)
 addDecorator(
   withOptions({
     name: 'Brigade',
