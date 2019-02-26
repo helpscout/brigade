@@ -78,16 +78,12 @@ describe('createStore tests', () => {
   })
 
   describe('extraArguments tests', () => {
-    let doSomething, extraArgument
-    const doSomethingAction = greeting => (state, dispatch, {doSomething}) =>
-      doSomething(greeting)
-
-    beforeEach(() => {
-      doSomething = jest.fn()
-      extraArgument = {doSomething}
-    })
     test('should have access to extraArgument', () => {
-      const store = createStore({preloadedState, reducers, extraArgument})
+      const doSomethingAction = greeting => (state, dispatch, {doSomething}) =>
+        doSomething(greeting)
+      const doSomething = jest.fn()
+      const extraArgument = { doSomething }
+      const store = createStore({ preloadedState, reducers, extraArgument })
       expect(doSomething).not.toHaveBeenCalled()
       store.dispatch(doSomethingAction('hello'))
       expect(doSomething).toHaveBeenCalledWith('hello')
