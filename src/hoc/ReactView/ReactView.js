@@ -23,7 +23,7 @@ const ReactView = View =>
       this._component = this.template(props)
       if (isRerender) {
         // If we are re-rendering, we want to call ReactDOM.render() to refresh
-        this.renderComponent()
+        this.mountComponent()
       }
       this._triggerRendered()
     },
@@ -39,12 +39,12 @@ const ReactView = View =>
     },
 
     onShow(...args) {
-      this.renderComponent()
+      this.mountComponent()
       const {onShow} = View.prototype
       onShow && onShow.apply(this, ...args)
     },
 
-    renderComponent() {
+    mountComponent() {
       ReactDOM.render(this._component, this.$el[0], () =>
         this.onComponentUpdated(),
       )

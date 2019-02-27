@@ -1,0 +1,65 @@
+---
+name: StatefulReactView
+route: /stateful-react-view
+---
+
+# StatefulReactView
+
+StatefulReactView is a higher order function (HOF) that ships with Brigade since 1.1.0
+
+> StatefulReactView requires Marionette 1.8.x
+
+## Overview
+
+StatefulReactView builds off of ReactView with a dead simple `template` method that allows you to return a React
+Component in lieu of an HTML string.
+
+What's different is that whereas ReactView expects you to manually pass any props you may want in to the React Component
+in `template()`, StatefulReactView expects to be passed a Redux `store`, which it smashes into a `<Provider>` and wraps
+around the Component returned from `template()`.
+
+This is a very powerful pattern which allows for a completely React/Redux-based development to occur inside the app,
+with a Redux store being passed in from outside, typically at the Router/Controller level.
+
+**StatefulReactView is considered best practice for building complex React/Redux apps inside Marionette**
+
+## Basic Usage
+
+```
+import {StatefulReactView, createStore} from '@helpscout/brigade'
+// regular old Redux reducers
+import reducers from './reducers'
+import React from 'react'
+
+const preloadedState = { todos: [] }
+// All application state and logic lives in the Redux store
+const store = createStore({ reducers, preloadedState })
+const TodoAppView = StatefulReactView().extend({
+  template(props) {
+    return <TodoApp {...props} />
+  }
+}))
+
+region.show(new TodoAppView({ store }))
+```
+
+## Ideal Use Case: Pure Internal State
+
+The ideal use case for StatefulReactView is to rewrite a large, high-level
+chunk of a Marionette Application with a React-Redux application. It represents
+the penultimate stage of Reactification: just before the Backbone app is
+completely consumed. A good example would be using StatefulReactView to build
+a major page underneath a Backbone Route.
+
+Brigade exposes a [createStore](/external-reducers#createstore) method to help initialize Redux store
+for use with `StatefulReactView`. In cases where the internal React application needs to access
+external legacy callbacks or APIs, this can be achieved [using `extraArgument`](/exposing-external-methods).
+
+## Handling External State
+
+Sometimes in legacy Backbone Applications undergoing rewrites to React, it is
+necessary to use pieces of state that live in legacy Backbone Models or Collections.
+`StatefulReactView` can be used in conjunction with a few opt-in helpers to allow specific
+slices of Redux state to be managed externally, via Backbone Models and Collections.
+
+Brigade allows you to inject externally-managed state through the use of [External Reducers](/external-reducers).

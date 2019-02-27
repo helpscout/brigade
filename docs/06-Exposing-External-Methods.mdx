@@ -1,0 +1,35 @@
+---
+name: Exposing External Methods
+route: /exposing-external-methods
+---
+
+# Exposing External Methods
+
+## Overview
+
+An important capability in React/Redux applications embedded in Backbone pages is the ability to expose
+external methods and callbacks that live in the legacy application.
+
+## extraArgument
+
+By default, [createStore](/external-reducers#createstore) will include [thunk](https://github.com/reduxjs/redux-thunk),
+and allows you to define an `extraArgument` which will be provided to your action
+creators as described [here](https://github.com/reduxjs/redux-thunk#injecting-a-custom-argument).
+This is a very powerful pattern in a React-inside-Backbone context, because it
+allows your Redux action creators to access external resources or APIs from your
+legacy application.
+
+```
+// Some old error notification function
+const extraArgument = { legacyDisplayError }
+const store = createStore({ reducers, preloadedState, extraArgument })
+
+// actions/api.js
+export const fetchUserError = errorMessage => (dispatch, getState, {legacyDisplayError}) => {
+  legacyDisplayError(errorMessage)
+}
+```
+
+This pattern is helpful because it allows you to hide external methods from your Component layer, and
+easily mock external methods when writing tests for your action dispatchers, which are the only
+place in your React/Redux application which need to be aware of these external methods or APIs.
