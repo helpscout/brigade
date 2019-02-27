@@ -37,7 +37,6 @@ describe('combineReducers tests', () => {
   test('should call createExternalReducers with backbone entitites', () => {
     const { reducers: reducersReturnVal, unbindExternals: unbindReturnVal } = combineReducers({ todos, user, customers }, getStore)
     expect(createExternalReducers).toHaveBeenCalledWith({ user, customers }, getStore)
-    expect(createExternalReducers).toHaveBeenCalledWith({ user, customers }, getStore)
     expect(combineReducersRedux).toHaveBeenCalled()
     expect(reducersReturnVal).toBe(reducers)
     expect(unbindReturnVal).toBe(unbindExternals)
