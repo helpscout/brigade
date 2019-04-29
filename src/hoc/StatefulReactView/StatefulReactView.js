@@ -7,12 +7,12 @@ const StatefulReactView = (View = Marionette.ItemView) => {
   const RV = ReactView(View)
   return RV.extend({
     initialize({store}) {
-      View.prototype.initialize.apply(this, arguments)
+      RV.prototype.initialize.apply(this, arguments)
       this.__store = store
     },
 
-    renderComponent: function () {
-      return <Provider store={ this.__store }>{ this.template() }</Provider>
+    renderComponent: function() {
+      return <Provider store={this.__store}>{this.template()}</Provider>
     },
 
     render() {
