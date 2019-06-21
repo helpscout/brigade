@@ -86,6 +86,7 @@
   },
   "peerDependencies": {
     "backbone": "^1",
+    "backbone.marionette": ">= 1.8",
     "react": "^15 || ^16",
     "react-dom": "^15 || ^16",
     "react-redux": "^6.0.1",

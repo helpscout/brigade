@@ -13,18 +13,19 @@ Brigade.
 ### Peer Dependencies:
 
 - [Backbone](https://www.npmjs.com/package/backbone)
+- [Marionette](https://www.npmjs.com/package/backbone.marionette) (Optional)
 - [React](https://www.npmjs.com/package/react)
 - [React DOM](https://www.npmjs.com/package/react-dom)
-
-### Optional Peer Dependencies
-
-- [Marionette](https://www.npmjs.com/package/backbone.marionette)
+- [React Redux](https://www.npmjs.com/package/react-redux)
+- [Redux](https://www.npmjs.com/package/redux)
+- [Redux Thunk](https://www.npmjs.com/package/redux-thunk)
 
 ### Notes
 
 - Backbone requires jQuery and underscore.
 - brigade.ReactMounter should work with any version of Backbone or Marionette
 - brigade.ReactView only supports Marionette 1.8.*
+- brigade.StatefulReactView only supports Marionette 1.8.*
 - React 15 and 16 are supported
 
 ## Insallation
@@ -38,34 +39,37 @@ npm i -S @helpscout/brigade
 
 ## Choose Your Flavor
 
-Brigade includes two higher-order functions (HOF) to help you integrate React
+Brigade includes three higher-order functions (HOF) to help you integrate React
 into your Backbone or Marionette apps.
 
-Both HOFS have the same API. Invoke the HOF with a View to create a new View
-that is enhanced with React capabilities.
+All three HOFs have the same API. Invoke the HOF with a View to create a new View that is
+enhanced with React capabilities.
 
 ```
 import Marionette from 'backbone.marionette'
-import {ReactMounter, ReactView} from '@helpscout/brigade'
+import {ReactMounter, ReactView, StatefulReactView } from '@helpscout/brigade'
 
 const ViewA = ReactMounter(Marionette.ItemView)
 const ViewB = ReactView(Marionette.ItemView)
+const ViewC = StatefulReactView(Marionette.ItemView)
 ```
 
 The signature of each HOF is the same, but the differences end there. They
-accomodate two distinct means of integrating React into a Backbone or
+accomodate three distinct means of integrating React into a Backbone or
 Marionette application.
 
-1. ReactMounter mounts React components inside a Backbone or Marionette View.
+1. ReactMounter mounts one or more React components inside a Backbone or Marionette View.
 2. ReactView uses React as the template layer in a Marionette ItemView.
+3. StatefulReactView also uses React as the template layer in a Marionette ItemView and it expects to be passed a 
+   Redux store, which is smashed into a `<Provider>` that wraps the component returned from `template()`.
 
-It is recommended that you learn about both of these HOFs and then choose the
+It is recommended that you learn all three of these HOFs and then choose the
 one that best suits the task at hand.
 
 ## Migrating from 0.x to 1.x
 
 Brigade 1.0.0 drops the default export. Users need to pick a flavour, importing
-ReactMounter or ReactView, depending on their use case.
+ReactMounter, ReactView, or StatefulReactView depending on their use case.
 
 If you are moving from 0.x to 1.x you should replace:
 
@@ -88,7 +92,17 @@ ReactMounter builds on the default export from Brigade 0.3. The API for the
 about the differences and update your Views accordingingly. The new API is
 simpler, more flexible, and more powerful.
 
+For Marionette users specifically, you may find the new ReactView useful as a
+simple replacement for the template layer in Marionette.ItemView. You may also 
+find StatefulReactView useful as a replacement for the template layer
+in Marionette.ItemView which uses Redux as a store.
+
 ## Learn More
 
 - [ReactMounter](/react-mounter)
 - [ReactView](/react-view)
+- [StatefulReactView](/stateful-react-view)
+
+## Issues
+
+Report issues on Github at [https://github.com/helpscout/brigade/issues](https://github.com/helpscout/brigade/issues).
