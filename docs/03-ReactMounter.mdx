@@ -253,6 +253,43 @@ You will note in the above example, we do not need to remap the `addPerson`
 action. Because we used `store.getStatelessExternalActions()` the first
 argument will be the `person`, not the `state`.
 
+## Usage with Backbone Views
+
+While this library was designed to work with Marionette, `ReactMounter` is
+compatible with Backbone but it does require a bit of coercing. `ReactMounter`
+replies on a `render` event which Marionette implements in its views to know
+when it is safe to mount the React components. If you want to use this with
+Backbone views you can, but you will need to trigger a `render` event from 
+within your `render` method.
+
+For example:
+
+```
+import $ from 'jquery'
+import Backbone from 'backbone'
+import React from 'react'
+import { ReactMounter} from '@helpscout/brigade'
+
+const MyComponent = () => <div>Hello World</div>
+
+const AppView = ReactMounter(Backbone.View.extend({
+  el: $('#app'),
+
+  components: {
+    '#my-component': MyComponent
+  },
+
+  render() {
+    this.$el.html('<div id="my-component"></div>')
+    this.trigger('render')
+    return this
+  }
+}))
+
+const appView = new AppView()
+appView.render()
+```
+
 ## Ideal Use Case
 
 ReactMounter is ideally suited for mounting one or more complex React components
