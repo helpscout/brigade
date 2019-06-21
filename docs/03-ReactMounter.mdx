@@ -1,11 +1,9 @@
 ---
-name: ReactMounter (Deprecated)
+name: ReactMounter
 route: /react-mounter
 ---
 
 # ReactMounter
-
-###  (Deprecated)
 
 ReactMounter is a higher order function (HOF) that ships with Brigade since
 1.0.0. It replaces the default export from Brigade 0.x.
@@ -196,13 +194,15 @@ app.
 
 ```
 components() {
-  '#app': App,
-  initialState: {
-    person: this.person,
-    people: this.people,
-  },
-  externalActions: {
-    addPerson: this.addPerson,
+  '#app': {
+    component: App,
+    initialState: {
+      person: this.person,
+      people: this.people,
+    },
+    externalActions: {
+      addPerson: this.addPerson,
+    }
   }
 }
 ```
@@ -255,8 +255,12 @@ argument will be the `person`, not the `state`.
 
 ## Ideal Use Case
 
-ReactMounter is ideally suited for mounting complex React components or entire
-React applications inside of a Backbone or Marionette view. In such cases,
-all or some of the business logic and state is managed in Backbone or Marionette
-and synced with the React app via ReactMounter. The entire user interface of
-the feature would be built with React.
+ReactMounter is ideally suited for mounting one or more complex React components
+or entire React applications inside a Backbone or Marionette View, particularly
+where all of the business logic and state is controlled in the Backbone or 
+Marionette app and you are interested in syncing its state with React components
+or apps.
+
+In cases where you want to use Redux to manage state or where you are interested
+in migrating to a Redux architecture, you should use [StatefulReactView](/stateful-react-view)
+instead.
