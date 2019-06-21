@@ -45,6 +45,9 @@ Brigade has the following peer dependencies:
 - [Marionette](https://www.npmjs.com/package/backbone.marionette) (Optional)
 - [React](https://www.npmjs.com/package/react)
 - [React DOM](https://www.npmjs.com/package/react-dom)
+- [React Redux](https://www.npmjs.com/package/react-redux)
+- [Redux](https://www.npmjs.com/package/redux)
+- [Redux Thunk](https://www.npmjs.com/package/redux-thunk)
 
 Marionette is optional. Backbone requires jQuery and Underscore.
 
