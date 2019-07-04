@@ -5,6 +5,7 @@
 npm-debug.log*
 
 # Dependencies
+package-lock.json
 node_modules
 
 # Build output
