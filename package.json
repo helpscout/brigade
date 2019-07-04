@@ -63,7 +63,7 @@
     "enzyme": "3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.5.0",
-    "handlebars": "4.1.2",
+    "handlebars": "^4.1.2",
     "jest": "^23.6.0",
     "jest-dom": "^3.0.0",
     "jest-jquery-matchers": "^2.1.0",
