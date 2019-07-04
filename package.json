@@ -60,6 +60,7 @@
     "braces": "3.0.2",
     "coveralls": "^3.0.2",
     "docz": "^0.12.13",
+    "docz-theme-default": "^1.2.0",
     "enzyme": "3.7.0",
     "enzyme-adapter-react-16": "^1.7.0",
     "eslint": "^5.5.0",
