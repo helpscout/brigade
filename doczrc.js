@@ -2,8 +2,16 @@ export default {
   title: 'Brigade',
   description: 'Backbone-controlled React Components',
   themeConfig: {
-    colors: {
-      primary: '#22A1F0',
-    },
+    mode: 'dark',
   },
+  menu: [
+    'Introduction',
+    'Getting Started',
+    'ReactMounter',
+    'ReactView',
+    'StatefulReactView',
+    'Exposing External Methods',
+    'External Reducers',
+  ],
+  files: '**/*.mdx',
 }
