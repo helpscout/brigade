@@ -44,6 +44,7 @@
   "devDependencies": {
     "@babel/core": "^7.1.6",
     "@helpscout/helix": "^0.1.0",
+    "@helpscout/hsds-illos": "^1.8.0",
     "@helpscout/hsds-react": "^2.8.4",
     "@helpscout/zero": "1.0.3",
     "@storybook/addon-links": "^4.1.12",
@@ -69,7 +70,7 @@
     "jest-dom": "^3.0.0",
     "jest-jquery-matchers": "^2.1.0",
     "jest-util": "^23.4.0",
-    "jquery": "3.4.1",
+    "jquery": ">=3.5.0",
     "js-yaml": "3.13.1",
     "np": "3.0.4",
     "nyc": "^13.0.1",
